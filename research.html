@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbem 体系调研报告 · AI-Powered MRI 生物洞察平台</title>
+<style>
+  :root {
+    --ink: #0F1C2E;
+    --ink-soft: #1C2F45;
+    --paper: #F7F4EE;
+    --paper-deep: #EFEAE1;
+    --signal: #0E8F8A;
+    --signal-soft: #D7EFED;
+    --amber: #C47B3A;
+    --amber-soft: #F3E6D6;
+    --haze: #5E6F7D;
+    --line: #D5D0C6;
+    --white: #FFFFFF;
+    --good: #2F7D4A;
+    --warn: #B4532A;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono, .num, .stat-value, .metric, td.num-cell {
+    font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* progress */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: var(--signal); z-index: 100;
+  }
+
+  /* top nav */
+  .topbar {
+    position: sticky; top: 0; z-index: 90;
+    background: rgba(247,244,238,0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1120px; margin: 0 auto;
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+    font-size: 14px; letter-spacing: 0.04em; color: var(--ink);
+  }
+  .brand span { color: var(--signal); }
+  .toc-toggle {
+    display: none;
+    border: 1px solid var(--line); background: var(--white);
+    color: var(--ink); border-radius: 6px; padding: 8px 12px;
+    font-size: 13px; cursor: pointer;
+  }
+  .nav-links {
+    display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: flex-end;
+  }
+  .nav-links a {
+    color: var(--haze); text-decoration: none; font-size: 12px;
+    padding: 4px 6px; border-radius: 4px;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    color: var(--signal); background: var(--signal-soft);
+    outline: none;
+  }
+
+  /* layout shell */
+  .shell {
+    max-width: 1120px; margin: 0 auto;
+    padding: 0 24px 80px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+  }
+  .side {
+    position: sticky; top: 72px; align-self: start;
+    padding-top: 40px;
+    font-size: 12px;
+  }
+  .side ol {
+    list-style: none; margin: 0; padding: 0;
+    border-left: 1px solid var(--line);
+  }
+  .side li a {
+    display: block; padding: 8px 0 8px 14px;
+    color: var(--haze); text-decoration: none; line-height: 1.4;
+  }
+  .side li a:hover, .side li a.active {
+    color: var(--signal);
+  }
+  .side .side-label {
+    font-family: Georgia, serif;
+    font-size: 11px; letter-spacing: 0.12em;
+    color: var(--haze); margin: 0 0 12px 14px;
+    text-transform: uppercase;
+  }
+
+  main { min-width: 0; padding-top: 24px; }
+
+  /* hero */
+  .hero {
+    margin: 0 0 48px;
+    padding: 48px 36px 40px;
+    background:
+      linear-gradient(145deg, var(--ink) 0%, var(--ink-soft) 55%, #163048 100%);
+    color: var(--white);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; right: -40px; top: -40px;
+    width: 280px; height: 280px;
+    border: 1px solid rgba(14,143,138,0.35);
+    border-radius: 50%;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; right: 40px; bottom: -80px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(14,143,138,0.25), transparent 70%);
+  }
+  .eyebrow {
+    font-family: Georgia, serif;
+    font-size: 12px; letter-spacing: 0.16em;
+    color: var(--signal); margin: 0 0 16px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: Georgia, "Songti SC", serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.25; margin: 0 0 18px;
+    max-width: 16em;
+    position: relative; z-index: 1;
+  }
+  .hero-lead {
+    max-width: 40em; color: rgba(255,255,255,0.82);
+    font-size: 15px; margin: 0 0 28px;
+    position: relative; z-index: 1;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 20px 32px;
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 20px;
+  }
+  .hero-meta div strong {
+    display: block; font-family: Georgia, serif;
+    font-size: 18px; color: var(--white); margin-bottom: 2px;
+  }
+  .hero-meta div span { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+  /* sections */
+  section {
+    margin-bottom: 56px;
+    scroll-margin-top: 80px;
+  }
+  .sec-head {
+    display: grid; grid-template-columns: 56px 1fr;
+    gap: 16px; align-items: start;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-num {
+    font-family: Georgia, serif;
+    font-size: 28px; color: var(--signal);
+    line-height: 1; padding-top: 4px;
+  }
+  .sec-head h2 {
+    font-family: Georgia, "Songti SC", serif;
+    font-weight: 500;
+    font-size: 26px; margin: 0 0 6px;
+    line-height: 1.3;
+  }
+  .sec-head p {
+    margin: 0; color: var(--haze); font-size: 14px;
+  }
+
+  h3 {
+    font-family: Georgia, "Songti SC", serif;
+    font-weight: 500; font-size: 18px;
+    margin: 28px 0 12px;
+  }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--haze); font-size: 14px; }
+  .lead {
+    font-size: 17px; color: var(--ink-soft);
+    max-width: 46em;
+  }
+
+  /* callout */
+  .callout {
+    background: var(--white);
+    border-left: 3px solid var(--signal);
+    padding: 18px 20px;
+    margin: 20px 0;
+  }
+  .callout.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .callout strong { color: var(--ink); }
+
+  /* key insight strip */
+  .insight-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--line);
+    border: 1px solid var(--line);
+    margin: 24px 0;
+  }
+  .insight {
+    background: var(--white); padding: 18px 16px;
+  }
+  .insight .k {
+    font-family: Georgia, serif; font-size: 12px;
+    color: var(--signal); letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .insight p { margin: 0; font-size: 14px; line-height: 1.55; }
+
+  /* stats row */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin: 20px 0 28px;
+  }
+  .stat {
+    background: var(--white); border: 1px solid var(--line);
+    padding: 16px 14px;
+  }
+  .stat-value {
+    font-size: 22px; color: var(--ink); display: block;
+    margin-bottom: 4px; line-height: 1.2;
+  }
+  .stat-label { font-size: 12px; color: var(--haze); line-height: 1.4; }
+
+  /* figure block */
+  figure {
+    margin: 24px 0;
+    background: var(--white);
+    border: 1px solid var(--line);
+    padding: 20px 16px 14px;
+  }
+  figure svg { display: block; width: 100%; height: auto; }
+  figcaption {
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--haze); line-height: 1.5;
+  }
+  .fig-label {
+    font-family: Georgia, serif; font-size: 11px;
+    letter-spacing: 0.1em; color: var(--signal);
+    margin-bottom: 10px; text-transform: uppercase;
+  }
+
+  /* tables */
+  .table-wrap { overflow-x: auto; margin: 18px 0 8px; }
+  table {
+    width: 100%; border-collapse: collapse;
+    background: var(--white);
+    font-size: 13.5px;
+    min-width: 560px;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    text-align: left; vertical-align: top;
+  }
+  th {
+    background: var(--ink); color: var(--white);
+    font-weight: 500; font-size: 12px;
+    letter-spacing: 0.03em;
+  }
+  tr:nth-child(even) td { background: var(--paper); }
+  td.hl { background: var(--signal-soft) !important; font-weight: 600; }
+
+  /* bar chart */
+  .bars { margin: 18px 0 8px; }
+  .bar-row {
+    display: grid; grid-template-columns: 120px 1fr 90px;
+    gap: 10px; align-items: center;
+    margin-bottom: 10px; font-size: 13px;
+  }
+  .bar-track {
+    height: 18px; background: var(--paper-deep);
+    position: relative; border: 1px solid var(--line);
+  }
+  .bar-fill {
+    height: 100%; background: var(--haze);
+  }
+  .bar-fill.mri { background: var(--signal); }
+  .bar-fill.nir { background: #7A8B99; }
+  .bar-fill.hsi { background: #8B7355; }
+  .bar-fill.mws { background: #A67C52; }
+  .bar-fill.thz { background: #9B6B6B; }
+  .bar-fill.vis { background: #B0B8BE; }
+  .bar-note { color: var(--haze); font-size: 12px; text-align: right; }
+
+  /* product cards as editorial blocks */
+  .prod-list { display: grid; gap: 12px; margin: 18px 0; }
+  .prod {
+    display: grid; grid-template-columns: 140px 1fr;
+    gap: 16px;
+    background: var(--white); border: 1px solid var(--line);
+    padding: 16px 18px;
+  }
+  .prod-name {
+    font-family: Georgia, serif; font-size: 16px;
+    color: var(--signal);
+  }
+  .prod-name small {
+    display: block; font-family: inherit;
+    font-size: 11px; color: var(--haze); margin-top: 4px;
+  }
+  .prod p { margin: 0 0 8px; font-size: 14px; }
+  .prod ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink-soft); }
+
+  /* cases */
+  .case {
+    background: var(--white);
+    border: 1px solid var(--line);
+    padding: 22px 22px 18px;
+    margin: 16px 0;
+  }
+  .case-head {
+    display: flex; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    margin-bottom: 12px; align-items: baseline;
+  }
+  .case-head h3 { margin: 0; font-size: 18px; }
+  .tag {
+    display: inline-block; font-size: 11px;
+    padding: 3px 8px; border: 1px solid var(--signal);
+    color: var(--signal); letter-spacing: 0.04em;
+  }
+  .tag.amber { border-color: var(--amber); color: var(--amber); }
+  .quote {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 15px; color: var(--ink-soft);
+    border-left: 2px solid var(--signal);
+    padding: 4px 0 4px 14px; margin: 12px 0;
+    line-height: 1.65;
+  }
+  .quote cite {
+    display: block; margin-top: 6px;
+    font-style: normal; font-family: inherit;
+    font-size: 12px; color: var(--haze);
+  }
+
+  /* money model */
+  .money {
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    gap: 16px; margin: 18px 0;
+  }
+  .money-box {
+    background: var(--white); border: 1px solid var(--line);
+    padding: 18px;
+  }
+  .money-box h4 {
+    margin: 0 0 12px; font-family: Georgia, serif;
+    font-size: 15px; font-weight: 500;
+  }
+  .break-row {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 8px; padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .break-row:last-child { border-bottom: none; }
+  .break-row strong { font-family: "SF Mono", Menlo, monospace; }
+  .big-save {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 28px; color: var(--signal);
+    margin: 8px 0 4px;
+  }
+
+  /* timeline */
+  .timeline { margin: 20px 0; }
+  .tl-item {
+    display: grid; grid-template-columns: 88px 1fr;
+    gap: 16px; padding: 0 0 18px;
+    position: relative;
+  }
+  .tl-item::before {
+    content: ""; position: absolute;
+    left: 92px; top: 8px; bottom: -2px;
+    width: 1px; background: var(--line);
+  }
+  .tl-item:last-child::before { display: none; }
+  .tl-year {
+    font-family: Georgia, serif; font-size: 16px;
+    color: var(--signal); padding-top: 2px;
+  }
+  .tl-body { padding-left: 16px; position: relative; }
+  .tl-body::before {
+    content: ""; position: absolute;
+    left: -5px; top: 8px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--paper);
+    border: 2px solid var(--signal);
+  }
+  .tl-body h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  .tl-body p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+
+  /* why system */
+  .why-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin: 18px 0;
+  }
+  .why-item {
+    background: var(--white); border: 1px solid var(--line);
+    padding: 16px 18px;
+  }
+  .why-item h4 {
+    margin: 0 0 8px; font-family: Georgia, serif;
+    font-size: 15px; font-weight: 500; color: var(--ink);
+  }
+  .why-item p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+  .why-item .n {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 11px; color: var(--signal);
+    display: block; margin-bottom: 6px;
+  }
+
+  /* BP map */
+  .bp-map { margin: 18px 0; }
+  .bp-row {
+    display: grid; grid-template-columns: 100px 1fr 1fr;
+    gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .bp-row:first-child {
+    font-family: Georgia, serif; font-size: 12px;
+    color: var(--haze); letter-spacing: 0.06em;
+    padding-top: 0;
+  }
+  .bp-row:last-child { border-bottom: none; }
+  .bp-layer { font-weight: 600; color: var(--signal); }
+
+  /* footer */
+  footer {
+    margin-top: 40px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--haze);
+  }
+  footer ol { padding-left: 18px; margin: 10px 0 0; }
+  footer li { margin-bottom: 6px; line-height: 1.5; }
+  footer a { color: var(--haze); word-break: break-all; }
+
+  .disclaimer {
+    background: var(--paper-deep);
+    border: 1px dashed var(--line);
+    padding: 14px 16px; margin: 20px 0;
+    font-size: 13px; color: var(--haze);
+  }
+
+  /* two col */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; margin: 18px 0;
+  }
+  .panel {
+    background: var(--white); border: 1px solid var(--line);
+    padding: 18px 20px;
+  }
+  .panel h4 {
+    margin: 0 0 10px; font-family: Georgia, serif;
+    font-size: 15px; font-weight: 500;
+  }
+  .panel ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+  .panel li { margin-bottom: 6px; }
+
+  @media (max-width: 960px) {
+    .shell { grid-template-columns: 1fr; gap: 0; }
+    .side { display: none; }
+    .side.open {
+      display: block; position: fixed; inset: 56px 0 auto 0;
+      background: var(--paper); z-index: 80;
+      padding: 16px 24px 20px; border-bottom: 1px solid var(--line);
+      max-height: 60vh; overflow: auto;
+    }
+    .toc-toggle { display: inline-block; }
+    .nav-links { display: none; }
+    .insight-grid, .stats, .why-grid, .two-col, .money {
+      grid-template-columns: 1fr;
+    }
+    .prod { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 90px 1fr 70px; }
+    .bp-row { grid-template-columns: 1fr; gap: 4px; }
+    .hero { padding: 32px 22px 28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Orbem Research <span>· Inside-Out Intelligence</span></div>
+    <button class="toc-toggle" type="button" id="tocBtn" aria-expanded="false">目录</button>
+    <nav class="nav-links" aria-label="章节导航">
+      <a href="#s01">摘要</a>
+      <a href="#s02">公司</a>
+      <a href="#s03">原理</a>
+      <a href="#s04">流程</a>
+      <a href="#s05">竞品</a>
+      <a href="#s06">产品</a>
+      <a href="#s07">案例</a>
+      <a href="#s08">商业</a>
+      <a href="#s09">路径</a>
+      <a href="#s10">体系</a>
+      <a href="#s11">BP</a>
+      <a href="#s12">来源</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="side" id="sideToc">
+    <div class="side-label">Contents</div>
+    <ol>
+      <li><a href="#s01">01 执行摘要</a></li>
+      <li><a href="#s02">02 公司画像</a></li>
+      <li><a href="#s03">03 技术原理</a></li>
+      <li><a href="#s04">04 工业流程</a></li>
+      <li><a href="#s05">05 竞品谱系</a></li>
+      <li><a href="#s06">06 产品矩阵</a></li>
+      <li><a href="#s07">07 标杆案例</a></li>
+      <li><a href="#s08">08 商业模式</a></li>
+      <li><a href="#s09">09 发展路径</a></li>
+      <li><a href="#s10">10 体系成因</a></li>
+      <li><a href="#s11">11 BP 对齐</a></li>
+      <li><a href="#s12">12 资料来源</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero">
+      <p class="eyebrow">Competitive System Research · 2026</p>
+      <h1>Orbem 体系调研报告<br/>AI-Powered MRI 如何做成生物洞察平台</h1>
+      <p class="hero-lead">
+        本报告拆解德国深科技公司 Orbem（The Inside Out Company）的技术原理、工业化流程、产品矩阵、最新案例、商业模式与发展路径，回答一个问题：
+        他们为什么看起来成体系、而且发展这么快——以及这套方法如何写进我们的商业 BP。
+      </p>
+      <div class="hero-meta">
+        <div><strong>2019</strong><span>成立 · 慕尼黑 / 休斯顿</span></div>
+        <div><strong>&gt;200</strong><span>团队规模</span></div>
+        <div><strong>€55.5M</strong><span>Series B · 2025</span></div>
+        <div><strong>&gt;2亿</strong><span>累计扫描蛋数</span></div>
+        <div><strong>&lt;1s</strong><span>单件扫描速度</span></div>
+      </div>
+    </div>
+
+    <!-- 01 -->
+    <section id="s01">
+      <div class="sec-head">
+        <div class="sec-num">01</div>
+        <div>
+          <h2>执行摘要</h2>
+          <p>先把结论说清楚：Orbem 领先的不是“某一个传感器”，而是一条完整的工业化翻译路径。</p>
+        </div>
+      </div>
+
+      <p class="lead">
+        Orbem 把医院里慢、贵、复杂的 MRI，翻译成产线上<strong>快（&lt;1 秒）</strong>、
+        <strong>可负担（按扫描计费）</strong>、<strong>简单（AI 输出可执行分级）</strong> 的决策系统；
+        再把这套系统放进<strong>有监管刚需的家禽市场</strong>先证明，最后横向复制到水果等富水生物样本。
+      </p>
+
+      <div class="insight-grid">
+        <div class="insight">
+          <div class="k">INSIGHT 01</div>
+          <p>核心资产是<strong>平台</strong>，不是单点设备：一个物理原理（MRI 看水与软组织结构）服务多个垂直场景。</p>
+        </div>
+        <div class="insight">
+          <div class="k">INSIGHT 02</div>
+          <p>AI 在体系里有<strong>双重角色</strong>：既要读懂 3D 图像做决策，又要把 MRI 本身加速到工业节拍。</p>
+        </div>
+        <div class="insight">
+          <div class="k">INSIGHT 03</div>
+          <p>增长来自<strong>法规市场 + 数据飞轮 + 自动化伙伴 + OpEx 定价</strong>，而不只是实验室精度。</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>对我们的直接启示：</strong>
+        若要对标 Orbem，优先复制的是<strong>方法与节奏</strong>——问题定义 → 物理优势 → 工业节拍 → OpEx 模式 → 标杆客户 → 内容定义赛道标准——而不是只复制他们的传感器形态。
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section id="s02">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
+        <div>
+          <h2>公司画像</h2>
+          <p>从慕尼黑实验室到跨大西洋工业部署的 deep-tech 样本。</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value">2019</span>
+          <span class="stat-label">Orbem GmbH 成立<br/>慕尼黑总部</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">11</span>
+          <span class="stat-label">Genus Focus 孵化场安装<br/>公开口径</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">6国</span>
+          <span class="stat-label">法 / 德 / 荷 / 挪 / 瑞士 / 美</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">&gt;51</span>
+          <span class="stat-label">已验证商业品种 breeds</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>维度</th><th>信息</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>定位</td><td>The Inside Out Company — 用 AI 工业化 MRI，提供非破坏内部洞察</td></tr>
+            <tr><td>总部 / 办公</td><td>德国慕尼黑；美国休斯顿（2025）</td></tr>
+            <tr><td>团队</td><td>&gt;200 人；CEO Pedro Gómez，CPTO Miguel Molina，CSO Maria Laparidou，COO Benjamin Rauser</td></tr>
+            <tr><td>融资路径</td><td>德国联邦经济部 &gt;€1M（2019）→ 累计股权无关 €1.8M → Pre-seed（2021）→ EIC €2.5M（2021）→ Seed €5.2M（2022）→ Series A €30M（2023）→ <strong>Series B €55.5M（2025）</strong></td></tr>
+            <tr><td>代表性投资方</td><td>83North、La Famiglia（现 General Catalyst）、The Venture Collective、Possible Ventures、Innovation Industries、Supernova Invest 等</td></tr>
+            <tr><td>产品家族</td><td>Genus Focus / Scale / Echo + Nuts / Health / Future Solutions</td></tr>
+            <tr><td>奖项摘录</td><td>IBM Watson AI XPRIZE Top 10（2020）、EIC Accelerator（2021）、Google for Startups Accelerator（2022）、Bayern Innovationspreis（2024）、Sifted Top 100 AI Rising Startup（2025）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 1 · 组织即交付体系</div>
+        <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orbem组织能力结构图">
+          <rect width="760" height="340" fill="#fff"/>
+          <text x="380" y="28" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#0F1C2E">Orbem 内部能力层（官网团队结构）</text>
+          <!-- center -->
+          <rect x="270" y="140" width="220" height="60" rx="4" fill="#0F1C2E"/>
+          <text x="380" y="166" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#fff">AI-Powered MRI Platform</text>
+          <text x="380" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#7EC8C3">Inside-Out Intelligence</text>
+          <!-- top row -->
+          <rect x="40" y="40" width="140" height="44" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="110" y="60" text-anchor="middle" font-size="12" fill="#0F1C2E">Imaging</text>
+          <text x="110" y="74" text-anchor="middle" font-size="10" fill="#5E6F7D">快速工业 MRI</text>
+          <rect x="200" y="40" width="140" height="44" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="270" y="60" text-anchor="middle" font-size="12" fill="#0F1C2E">AI &amp; Data Science</text>
+          <text x="270" y="74" text-anchor="middle" font-size="10" fill="#5E6F7D">深度学习决策</text>
+          <rect x="360" y="40" width="140" height="44" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="430" y="60" text-anchor="middle" font-size="12" fill="#0F1C2E">Hardware / Systems</text>
+          <text x="430" y="74" text-anchor="middle" font-size="10" fill="#5E6F7D">可规模化硬件</text>
+          <rect x="520" y="40" width="200" height="44" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="620" y="60" text-anchor="middle" font-size="12" fill="#0F1C2E">Applications</text>
+          <text x="620" y="74" text-anchor="middle" font-size="10" fill="#5E6F7D">从生物标志物到数据点</text>
+          <!-- left -->
+          <rect x="40" y="140" width="140" height="60" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="110" y="165" text-anchor="middle" font-size="12" fill="#0F1C2E">Software + QE</text>
+          <text x="110" y="182" text-anchor="middle" font-size="10" fill="#5E6F7D">可集成 · 可测试</text>
+          <rect x="520" y="140" width="200" height="60" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="620" y="165" text-anchor="middle" font-size="12" fill="#0F1C2E">Infrastructure</text>
+          <text x="620" y="182" text-anchor="middle" font-size="10" fill="#5E6F7D">云 + 边缘支撑 AI</text>
+          <!-- bottom -->
+          <rect x="40" y="250" width="140" height="44" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="110" y="270" text-anchor="middle" font-size="12" fill="#0F1C2E">Field Operations</text>
+          <text x="110" y="284" text-anchor="middle" font-size="10" fill="#5E6F7D">安装与持续运行</text>
+          <rect x="200" y="250" width="140" height="44" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="270" y="270" text-anchor="middle" font-size="12" fill="#0F1C2E">Customer Support</text>
+          <text x="270" y="284" text-anchor="middle" font-size="10" fill="#5E6F7D">24/7 高吞吐保障</text>
+          <rect x="360" y="250" width="140" height="44" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="430" y="270" text-anchor="middle" font-size="12" fill="#0F1C2E">BD Poultry / Frontiers</text>
+          <text x="430" y="284" text-anchor="middle" font-size="10" fill="#5E6F7D">分行业商业化</text>
+          <rect x="520" y="250" width="200" height="44" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="620" y="270" text-anchor="middle" font-size="12" fill="#0F1C2E">Procurement / OpsEx / BI / Marketing</text>
+          <text x="620" y="284" text-anchor="middle" font-size="10" fill="#5E6F7D">规模化运营与内容获客</text>
+        </svg>
+        <figcaption>图 1 · Orbem 把 Imaging、AI、Hardware、Applications、Field Ops、Customer Support 分开建制——工业客户买的是 uptime 与可交付，不只是算法精度。</figcaption>
+      </figure>
+    </section>
+
+    <!-- 03 -->
+    <section id="s03">
+      <div class="sec-head">
+        <div class="sec-num">03</div>
+        <div>
+          <h2>技术原理：MRI × AI</h2>
+          <p>为什么 MRI 适合看生物内部；AI 在体系中的两重角色是什么。</p>
+        </div>
+      </div>
+
+      <h3>3.1 MRI 三步原理（Orbem 官方拆解）</h3>
+      <figure>
+        <div class="fig-label">Figure 2 · MRI 工作原理</div>
+        <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MRI原理三步图">
+          <rect width="760" height="280" fill="#fff"/>
+          <!-- step 1 -->
+          <rect x="30" y="40" width="210" height="160" rx="4" fill="#F7F4EE" stroke="#D5D0C6"/>
+          <text x="135" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#0E8F8A">1 · Magnetic</text>
+          <text x="135" y="100" text-anchor="middle" font-size="12" fill="#0F1C2E">产生无害磁场</text>
+          <text x="135" y="122" text-anchor="middle" font-size="12" fill="#5E6F7D">与样品中氢质子作用</text>
+          <text x="135" y="148" text-anchor="middle" font-size="11" fill="#5E6F7D">人体约 60% 是水</text>
+          <text x="135" y="168" text-anchor="middle" font-size="11" fill="#5E6F7D">蛋 / 果同样富水</text>
+          <!-- arrow -->
+          <path d="M250 120 H285" stroke="#0E8F8A" stroke-width="1.5" fill="none"/>
+          <path d="M280 114 L290 120 L280 126" fill="#0E8F8A"/>
+          <!-- step 2 -->
+          <rect x="300" y="40" width="210" height="160" rx="4" fill="#F7F4EE" stroke="#D5D0C6"/>
+          <text x="405" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#0E8F8A">2 · Resonance</text>
+          <text x="405" y="100" text-anchor="middle" font-size="12" fill="#0F1C2E">不同组织响应不同</text>
+          <text x="405" y="122" text-anchor="middle" font-size="12" fill="#5E6F7D">含水量 / 结构差异</text>
+          <text x="405" y="148" text-anchor="middle" font-size="11" fill="#5E6F7D">→ 对比度与亮度不同</text>
+          <text x="405" y="168" text-anchor="middle" font-size="11" fill="#5E6F7D">可区分褐变 / 空心 / 胚胎</text>
+          <path d="M520 120 H555" stroke="#0E8F8A" stroke-width="1.5" fill="none"/>
+          <path d="M550 114 L560 120 L550 126" fill="#0E8F8A"/>
+          <!-- step 3 -->
+          <rect x="570" y="40" width="160" height="160" rx="4" fill="#0F1C2E"/>
+          <text x="650" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#7EC8C3">3 · Imaging</text>
+          <text x="650" y="105" text-anchor="middle" font-size="12" fill="#fff">重建高分辨 3D</text>
+          <text x="650" y="130" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.75)">连续切片合成整体</text>
+          <text x="650" y="155" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.75)">可任意角度再切</text>
+          <text x="380" y="240" text-anchor="middle" font-size="13" fill="#0F1C2E" font-family="Georgia,serif">关键：MRI 测的是水与组织成分，不是密度 —— 这正是软组织缺陷的优势所在</text>
+        </svg>
+        <figcaption>图 2 · MRI = Magnetic + Resonance + Imaging。对富水软组织（果肉褐变、过熟、空心、蛋内胚胎）天然高对比。</figcaption>
+      </figure>
+
+      <h3>3.2 AI 的双重角色</h3>
+      <div class="two-col">
+        <div class="panel">
+          <h4>角色 A · 理解图像 → 业务决策</h4>
+          <ul>
+            <li>深度学习训练 3D MRI 图像（数十万级，持续增长）</li>
+            <li>输出不是“给人看的片子”，而是<strong>单枚/单果的可执行判断</strong></li>
+            <li>跨品种、孵化日龄、产地做数据设计；部署后持续学习</li>
+            <li>家禽公开准确率约 <strong class="mono">95–98%</strong></li>
+            <li>新品类冷启动：实验室约<strong>几百个样本</strong>即可到客户可感知价值</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>角色 B · 加速 MRI 本身</h4>
+          <ul>
+            <li>传统临床 MRI：15–90 分钟/次</li>
+            <li>若用传统方法扫全球约 1000 亿枚孵化蛋 ≈ <strong class="mono">380 万年</strong></li>
+            <li>Orbem 早期人工约 1 枚/分钟 → 现 <strong class="mono">&lt;1 秒/枚</strong></li>
+            <li>白皮书：0.8s，有效产能约 3,100 枚/h/模块</li>
+            <li>方法：连续传送 + 采集重建算法 + DL 修复低质量图像</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>安全叙事（BP 可直接引用）：</strong>
+        Orbem 反复强调 MRI <strong>不是电离辐射</strong>，使用射频（类比 WiFi/手机），操作正确时比 X-ray / PET 更安全；
+        果品扫描非破坏，不改变组织、风味与货架期。
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section id="s04">
+      <div class="sec-head">
+        <div class="sec-num">04</div>
+        <div>
+          <h2>工业化技术流程</h2>
+          <p>从医院 MRI 到 packing line：他们真正的产品化动作。</p>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 3 · 产线四步流程</div>
+        <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orbem工业流程">
+          <rect width="760" height="300" fill="#fff"/>
+          <text x="380" y="32" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#0F1C2E">Genus 系统工业流程（家禽 / 水果通用逻辑）</text>
+          <!-- flow boxes -->
+          <rect x="30" y="70" width="150" height="70" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="105" y="100" text-anchor="middle" font-size="13" fill="#0F1C2E">1 上料</text>
+          <text x="105" y="120" text-anchor="middle" font-size="11" fill="#5E6F7D">推车 / 托盘 / 传送带</text>
+          <rect x="210" y="70" width="150" height="70" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="285" y="100" text-anchor="middle" font-size="13" fill="#0F1C2E">2 机器人取放</text>
+          <text x="285" y="120" text-anchor="middle" font-size="11" fill="#5E6F7D">硅胶吸盘 · 连续供给</text>
+          <rect x="390" y="70" width="170" height="70" rx="4" fill="#0F1C2E"/>
+          <text x="475" y="100" text-anchor="middle" font-size="13" fill="#7EC8C3">3 工业 MRI 扫描</text>
+          <text x="475" y="120" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.75)">非金属链 · 单件 &lt;1s</text>
+          <rect x="590" y="70" width="140" height="70" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="660" y="100" text-anchor="middle" font-size="13" fill="#0F1C2E">4 现场 AI</text>
+          <text x="660" y="120" text-anchor="middle" font-size="11" fill="#5E6F7D">边缘服务器推理</text>
+          <!-- arrows row1 -->
+          <path d="M185 105 H205" stroke="#0E8F8A" stroke-width="1.5"/><path d="M200 99 L210 105 L200 111" fill="#0E8F8A"/>
+          <path d="M365 105 H385" stroke="#0E8F8A" stroke-width="1.5"/><path d="M380 99 L390 105 L380 111" fill="#0E8F8A"/>
+          <path d="M565 105 H585" stroke="#0E8F8A" stroke-width="1.5"/><path d="M580 99 L590 105 L580 111" fill="#0E8F8A"/>
+          <!-- bottom -->
+          <rect x="210" y="180" width="340" height="70" rx="4" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="380" y="210" text-anchor="middle" font-size="13" fill="#0F1C2E">5 机械分拣 + 客户自定义等级</text>
+          <text x="380" y="232" text-anchor="middle" font-size="11" fill="#5E6F7D">嵌入现有 packing / sorting line · 输出匹配客户产线语言</text>
+          <path d="M660 145 V165 H380 V175" stroke="#C47B3A" stroke-width="1.5" fill="none"/>
+          <path d="M374 170 L380 180 L386 170" fill="#C47B3A"/>
+        </svg>
+        <figcaption>图 3 · CEO Pedro Gómez 对 The Packer 的表述可压缩为三步：自动化搬运 → 大筒采集 → 电脑决策并触发分拣。等级阈值由生产者设定。</figcaption>
+      </figure>
+
+      <h3>4.1 工程壁垒清单</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>工程点</th><th>他们怎么做</th><th>为什么难</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>全自动化</td>
+              <td>trolley-to-trolley，通常仅 1 名操作员</td>
+              <td>孵化场/包装厂人力短缺，少人即卖点</td>
+            </tr>
+            <tr>
+              <td>MRI 安全</td>
+              <td>传送链等使用非金属材料；磁体室锁定</td>
+              <td>金属干扰图像且有磁吸风险；日常产线不能进磁体室</td>
+            </tr>
+            <tr>
+              <td>数据对齐</td>
+              <td>移动、扫描、AI 异步并行，结果必须 100% 对上物理对象</td>
+              <td>分错一枚/一果就是商业事故</td>
+            </tr>
+            <tr>
+              <td>速度 vs 画质</td>
+              <td>采集/重建算法 + DL 超分修复</td>
+              <td>提速通常掉精度；工业场景不允许</td>
+            </tr>
+            <tr>
+              <td>天然尺寸差异</td>
+              <td>水果始终按最大可能尺寸采集视野</td>
+              <td>大小果混线时不能每果重配扫描协议</td>
+            </tr>
+            <tr class="hl-row">
+              <td class="hl">分级规则权</td>
+              <td class="hl">等级阈值由生产者/买家标准定制</td>
+              <td class="hl">降低替换阻力，技术方做“看见+可配置输出”</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>4.2 果品吞吐公开口径</h3>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value">~20t/h</span>
+          <span class="stat-label">西瓜约 20,000 kg/h<br/>FreshPlaza 访谈</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">~4,000</span>
+          <span class="stat-label">果/h（按 5kg/果折算）</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">44,000</span>
+          <span class="stat-label">lb/h Genus Echo 上限<br/>US 商业测算页</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">3,100+</span>
+          <span class="stat-label">蛋/h/模块（家禽）</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section id="s05">
+      <div class="sec-head">
+        <div class="sec-num">05</div>
+        <div>
+          <h2>竞品技术谱系</h2>
+          <p>用户关注的那篇对比文完整拆解：从表面检查到 3D 透明。</p>
+        </div>
+      </div>
+
+      <p class="lead">
+        文章《Fruit Quality Control: Comparing NIR, Hyper-Spectral Imaging, Microwave Sensing, Tera-hertz Sensing, and AI-powered MRI》（2026-02-16）本质是一篇<strong>赛道教育 + 标准定义</strong>内容：
+        先给行业损耗问题定价，再把“评价标准”锚定在<strong>穿透深度 × 空间分辨率 × 产线集成</strong>三元组上，最终指向 MRI。
+      </p>
+
+      <h3>5.1 行业问题框架</h3>
+      <div class="two-col">
+        <div class="panel">
+          <h4>损耗与索赔</h4>
+          <ul>
+            <li>FAO：收获后、到零售前约 <strong>13.2%</strong> 食物被浪费</li>
+            <li>水果类损失可达 <strong>50%</strong> 量级</li>
+            <li>痛点：退货、索赔、品牌损伤、次果误发</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>决策范式迁移</h4>
+          <ul>
+            <li>从主观抽检 → 100% 非破坏全检</li>
+            <li>从 guesswork → 数据驱动分级</li>
+            <li>从“看表皮” → “皮肤到果芯”</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>5.2 穿透深度对比（报告主视觉）</h3>
+      <div class="bars">
+        <div class="bar-row">
+          <span>可见光</span>
+          <div class="bar-track"><div class="bar-fill vis" style="width:4%"></div></div>
+          <span class="bar-note">0 mm</span>
+        </div>
+        <div class="bar-row">
+          <span>太赫兹</span>
+          <div class="bar-track"><div class="bar-fill thz" style="width:8%"></div></div>
+          <span class="bar-note">&lt;1 mm</span>
+        </div>
+        <div class="bar-row">
+          <span>HSI 高光谱</span>
+          <div class="bar-track"><div class="bar-fill hsi" style="width:22%"></div></div>
+          <span class="bar-note">&lt;4 mm</span>
+        </div>
+        <div class="bar-row">
+          <span>NIR 近红外</span>
+          <div class="bar-track"><div class="bar-fill nir" style="width:28%"></div></div>
+          <span class="bar-note">1–5 mm</span>
+        </div>
+        <div class="bar-row">
+          <span>微波传感</span>
+          <div class="bar-track"><div class="bar-fill mws" style="width:70%"></div></div>
+          <span class="bar-note">穿透深·分辨低</span>
+        </div>
+        <div class="bar-row">
+          <span><strong>AI-MRI</strong></span>
+          <div class="bar-track"><div class="bar-fill mri" style="width:100%"></div></div>
+          <span class="bar-note"><strong>全穿透 · 高分辨</strong></span>
+        </div>
+      </div>
+      <p class="muted">条形图示意穿透能力相对水平；微波穿透深但空间分辨率极低，工业在线集成困难。数据来自 Orbem 对比文与所引文献。</p>
+
+      <h3>5.3 六种技术对照表</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>技术</th><th>主要用途</th><th>穿透</th><th>分辨率</th><th>产线</th><th>死穴</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>可见光</td><td>颜色 / 尺寸</td><td class="num-cell">0 mm</td><td>高</td><td>极佳</td><td>看不见任何内部缺陷</td>
+            </tr>
+            <tr>
+              <td>NIR</td><td>糖度 / 干物质</td><td class="num-cell">1–5 mm</td><td>中</td><td>极佳</td><td>深部腐烂/果芯盲区；需频繁重校</td>
+            </tr>
+            <tr>
+              <td>HSI</td><td>斑点 / 污染</td><td class="num-cell">&lt;4 mm</td><td>高</td><td>良好</td><td>受果皮与组织光学性质限制</td>
+            </tr>
+            <tr>
+              <td>微波</td><td>整体水分 / 酸度</td><td class="num-cell">全穿透</td><td>很低</td><td>困难</td><td>无法定位局部缺陷；难在线</td>
+            </tr>
+            <tr>
+              <td>太赫兹</td><td>干燥食品 / 表面</td><td class="num-cell">&lt;1 mm</td><td>高</td><td>实验性</td><td>水分强烈吸收；鲜果几乎不适用</td>
+            </tr>
+            <tr>
+              <td class="hl">AI-MRI</td>
+              <td class="hl">深部缺陷 / 3D 结构</td>
+              <td class="hl">全穿透</td>
+              <td class="hl">高</td>
+              <td class="hl">优秀</td>
+              <td class="hl">设备体积大（用固定工位化解）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>5.4 技术演进时间线</h3>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">1800</div><div class="tl-body"><h4>红外被发现</h4><p>Herschel 发现红外辐射，为光谱检测奠基。</p></div></div>
+        <div class="tl-item"><div class="tl-year">1930s–40s</div><div class="tl-body"><h4>NMR 理论</h4><p>Isidor Rabi 提出核磁共振原理，1944 年获诺贝尔物理学奖。</p></div></div>
+        <div class="tl-item"><div class="tl-year">1950s</div><div class="tl-body"><h4>NIR 进入果品质控</h4><p>至今仍是“看表面以下一点”的行业标准。</p></div></div>
+        <div class="tl-item"><div class="tl-year">1970s</div><div class="tl-body"><h4>MRI 临床化</h4><p>Lauterbur 与 Mansfield 推动医学 MRI 应用。</p></div></div>
+        <div class="tl-item"><div class="tl-year">1980s</div><div class="tl-body"><h4>高光谱成像</h4><p>NASA 遥感起源，后迁移到农业与果品。</p></div></div>
+        <div class="tl-item"><div class="tl-year">2020s</div><div class="tl-body"><h4>工业 AI-MRI</h4><p>Orbem 等把临床 MRI 推到产线速度与 OpEx 价格。</p></div></div>
+      </div>
+
+      <div class="callout">
+        <strong>为什么 X-ray 不是终局：</strong>
+        X-ray 适合异物与密度异常；但水基生物缺陷（褐变、腐烂、过熟）健康组织与坏组织密度差小，对比不足。
+        MRI 测的是<strong>水分与组织成分</strong>，正好对准果品质控要抓的那一类问题。
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section id="s06">
+      <div class="sec-head">
+        <div class="sec-num">06</div>
+        <div>
+          <h2>产品矩阵：Genus 家族</h2>
+          <p>同一平台，按场景拆成可销售 SKU。</p>
+        </div>
+      </div>
+
+      <div class="prod-list">
+        <div class="prod">
+          <div class="prod-name">Genus Focus<small>In-ovo Sexing</small></div>
+          <div>
+            <p>孵化前非侵入判定蛋内胚胎性别，服务蛋鸡孵化场，回应雄雏扑杀的伦理与监管压力。</p>
+            <ul>
+              <li>孵化结果雄雏率官方 &lt;1%；Sirevåg 案例近 10 次均值 0.5%，最新批次 0.25%</li>
+              <li>白皮书：0.8s/枚；约 3,100–3,275 枚/h/模块</li>
+              <li>适用全部商业品种（棕壳 / 白壳）；累计扫描 &gt;2 亿枚</li>
+              <li>与 Vencomatic Group 战略合作交付</li>
+            </ul>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="prod-name">Genus Scale<small>Fertilization Status</small></div>
+          <div>
+            <p>孵化开始前（Day 0）检测受精状态，剔除未受精蛋。</p>
+            <ul>
+              <li>可释放孵化器产能最高 <strong>20%</strong></li>
+              <li>肉鸡孵化场未受精比例约 8–20%</li>
+              <li>优于 D4–7 或 D18 照蛋：更早、更省能源与空间</li>
+              <li>被剔除蛋可转入宠物食品蛋白等副产品价值流</li>
+            </ul>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="prod-name">Genus Echo<small>Fruit Grading</small></div>
+          <div>
+            <p>水果内部品质非破坏分级，当前优化品类：西瓜、牛油果；芒果缺陷库已公开。</p>
+            <ul>
+              <li>西瓜：隐性撞击、过熟、空心病</li>
+              <li>牛油果：内部褐变、维管束褐变、碰压、腐烂、冷害、早萌、未熟</li>
+              <li>芒果：内部褐变、jelly seed、soft nose</li>
+              <li>嵌入现有产线；检测规则可按买家标准定制</li>
+            </ul>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="prod-name">Nuts<small>QA / QC</small></div>
+          <div>
+            <p>坚果内部霉变、虫蛀、裂纹、变形、变色；在壳/去壳前后均可；强调一致性与自动化。</p>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="prod-name">Health / Future<small>愿景层</small></div>
+          <div>
+            <p>Health 页强调“让非侵入内部洞察更普惠”，尚处使命起步阶段；Future Solutions 对外共创——What can we reveal for you?</p>
+          </div>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 4 · 平台 → 场景复用逻辑</div>
+        <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Genus产品复用逻辑">
+          <rect width="760" height="260" fill="#fff"/>
+          <rect x="40" y="90" width="200" height="80" rx="4" fill="#0F1C2E"/>
+          <text x="140" y="125" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#7EC8C3">AI-Powered MRI</text>
+          <text x="140" y="148" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.75)">工业硬件 + AI + 数据飞轮</text>
+          <path d="M250 130 H310" stroke="#0E8F8A" stroke-width="1.5"/>
+          <path d="M305 124 L315 130 L305 136" fill="#0E8F8A"/>
+          <rect x="330" y="30" width="380" height="48" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="520" y="50" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Focus · 蛋内性别</text>
+          <text x="520" y="66" text-anchor="middle" font-size="11" fill="#5E6F7D">监管刚需 · 已规模化</text>
+          <rect x="330" y="92" width="380" height="48" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="520" y="112" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Scale · 受精状态</text>
+          <text x="520" y="128" text-anchor="middle" font-size="11" fill="#5E6F7D">释放孵化产能</text>
+          <rect x="330" y="154" width="380" height="48" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="520" y="174" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Echo · 水果内部品质</text>
+          <text x="520" y="190" text-anchor="middle" font-size="11" fill="#5E6F7D">2026 西瓜首发 · 美国 2027</text>
+          <rect x="330" y="216" width="380" height="30" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="520" y="236" text-anchor="middle" font-size="12" fill="#5E6F7D">Nuts / Health / Future · 横向扩展中</text>
+        </svg>
+        <figcaption>图 4 · 一个物理原理 → 多场景 SKU。这是 Orbem 体系感的结构性来源。</figcaption>
+      </figure>
+    </section>
+
+    <!-- 07 -->
+    <section id="s07">
+      <div class="sec-head">
+        <div class="sec-num">07</div>
+        <div>
+          <h2>最新案例</h2>
+          <p>果品标杆 + 家禽商业闭环 + 美国路线图。</p>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>JimboFresh（西班牙）· 全球首个鲜果商业装机</h3>
+          <span class="tag">Fruits · 2026</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><td style="width:28%">时间</td><td>新闻稿 2026-05-12；2026 产季启用</td></tr>
+              <tr><td>客户</td><td>JimboFresh（Jimbee 品牌），西班牙领先西瓜生产商</td></tr>
+              <tr><td>规模</td><td>2025 年营销西瓜 &gt;38,000 吨</td></tr>
+              <tr><td>产品</td><td>Genus Echo for watermelons</td></tr>
+              <tr><td>意义</td><td>全球首家用 AI-MRI 做鲜果内部质控的商业部署；行业标杆客户，而非 pilot</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <blockquote class="quote">
+          “It's in our DNA to ensure that consumers always make the right choice… With Orbem's technology, we move from skilled guesswork to near-perfect precision.”
+          <cite>— Miguel Ángel J., CEO, JimboFresh</cite>
+        </blockquote>
+        <blockquote class="quote">
+          “When a company at their scale commits to non-destructive internal inspection, it changes what retailers and consumers will expect from everyone else.”
+          <cite>— Pedro Gómez, CEO, Orbem</cite>
+        </blockquote>
+        <p class="muted">BP 提炼：不是找小农场做 demo，而是<strong>先绑定能改变一个品类标准的大生产者</strong>。</p>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>Sirevåg Rugeri（挪威）· 家禽侧商业成功闭环</h3>
+          <span class="tag amber">Poultry · 2025–2026</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="stat-value">€4M</span><span class="stat-label">相关投入 43M NOK</span></div>
+          <div class="stat"><span class="stat-value">200万</span><span class="stat-label">母雏 / 年</span></div>
+          <div class="stat"><span class="stat-value">0.5%</span><span class="stat-label">近 10 次孵化雄雏率</span></div>
+          <div class="stat"><span class="stat-value">1 FTE</span><span class="stat-label">核心产线人力</span></div>
+        </div>
+        <p>
+          背景：挪威最大食品分销商 Nortura（约 65% 蛋市场）2023 年推行 in-ovo 性别鉴定，并对 in-ovo 蛋给予约
+          <strong>+10%</strong> 溢价。Salte 家族与饲料伙伴合资新建 Sirevåg Rugeri，2025-02 投产，绑定 Genus Focus。
+        </p>
+        <p>
+          结果：几乎无需扑杀；孵化窗更整齐、雏鸡质量提升、育成舍死亡率下降；软件更新后速度提升近 10%；
+          客户公开表示 in-ovo + Genus Focus 是新孵化场<strong>建立盈利模型的关键</strong>。
+        </p>
+        <blockquote class="quote">
+          “The Genus Focus technology and in-ovo sexing have been essential in enabling us to build a modern, efficient, and profitable hatchery.”
+          <cite>— Christoffer Singstad, Board Member, Sirevåg Rugeri</cite>
+        </blockquote>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>牛油果 / 芒果 · 市场教育与研发推进</h3>
+          <span class="tag">Market Education</span>
+        </div>
+        <p>
+          FreshPlaza 访谈（2025-10）中，New Markets 总监 Johann Steinert 指出：牛油果内部品质目前主要靠切开抽检，
+          有时一批被切开高达 <strong>10%</strong> 直接损耗；MRI 可非破坏可视化 bruising、mold、internal browning 与成熟度阶段。
+          芒果已有客户讨论，浆果亦被认为可能。冷启动约几百样本即可产生客户可感知价值。
+        </p>
+      </div>
+
+      <div class="case">
+        <div class="case-head">
+          <h3>美国路线图 · The Packer（2026-07-01）</h3>
+          <span class="tag">USA</span>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <h4>现状</h4>
+            <ul>
+              <li>欧洲客户用于欧洲生产</li>
+              <li>果品美国<strong>尚无装机</strong></li>
+              <li>家禽侧美国已有 installed base</li>
+              <li>休斯顿设美国总部</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h4>节奏</h4>
+            <ul>
+              <li><strong>2027 年初</strong>：首批美国果品部署</li>
+              <li><strong>2027 末–2028</strong>：更大范围采用</li>
+              <li>模式：OpEx，按扫描磅付费</li>
+              <li>目标客户：packers</li>
+            </ul>
+          </div>
+        </div>
+        <blockquote class="quote">
+          “I'm always mindful to say we cannot reduce rejection rates to 0%… but at least you know what's inside the produce, and you can start charging as a function of quality.”
+          <cite>— Pedro Gómez, CEO, Orbem · The Packer</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 08 -->
+    <section id="s08">
+      <div class="sec-head">
+        <div class="sec-num">08</div>
+        <div>
+          <h2>商业模式与经济账</h2>
+          <p>用 OpEx 降低决策门槛，用“节省模型”而不是硬件参数完成销售。</p>
+        </div>
+      </div>
+
+      <h3>8.1 定价模式</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>模式</th><th>表述</th><th>场景</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Performance fee / per egg</td>
+              <td>按枚或性能付费；客户可无大额前置设备投资</td>
+              <td>家禽；Vencomatic 最高 €15M 设备融资额度支持</td>
+            </tr>
+            <tr>
+              <td>Pay-per-scan / kg / pound</td>
+              <td>按扫描或重量计费，运营费用化</td>
+              <td>果品（The Packer、FreshPlaza 均确认）</td>
+            </tr>
+            <tr>
+              <td>高度可定制</td>
+              <td>成本随产品范围与需求变化；无统一公开价目</td>
+              <td>Genus Echo FAQ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>8.2 美国西瓜节省模型（Orbem 公开上界情景）</h3>
+      <div class="money">
+        <div class="money-box">
+          <h4>情景假设</h4>
+          <div class="break-row"><span>典型批装运量</span><strong>40,000 lb</strong></div>
+          <div class="break-row"><span>季节装运次数</span><strong>1,500</strong></div>
+          <div class="break-row"><span>季节总量</span><strong>60M lb</strong></div>
+          <div class="break-row"><span>行业拒收率</span><strong>3.5%</strong></div>
+          <div class="break-row"><span>目标拒收率</span><strong>1%</strong></div>
+          <div class="break-row"><span>避免拒收次数</span><strong>37.5</strong></div>
+        </div>
+        <div class="money-box">
+          <h4>模型化季节节省</h4>
+          <div class="big-save">≈ $700,000</div>
+          <p class="muted" style="margin-bottom:10px">精确合计 $700,211；官方称上界模型，非独立审计。</p>
+          <div class="break-row"><span>运费与改道避免</span><strong>$281,250</strong></div>
+          <div class="break-row"><span>产品价值回收</span><strong>$330,000</strong></div>
+          <div class="break-row"><span>QC 人力节省/再部署</span><strong>$38,961</strong></div>
+          <div class="break-row"><span>索赔与扣款避免</span><strong>$50,000</strong></div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>模型边界（Orbem 自己写明，BP 引用时建议保留）：</strong>
+        未包含破坏性抽样节省、溢价定价、增量收入、Orbem 自身定价，以及货架期恶化等未验证后果。
+        3.5% 是种植者/包装商现场参考，不是全国统计平均。
+      </div>
+
+      <h3>8.3 家禽侧客户经济逻辑</h3>
+      <div class="insight-grid">
+        <div class="insight">
+          <div class="k">政策溢价</div>
+          <p>挪威对 in-ovo 蛋约 <strong>+10%/kg</strong>，渠道与监管共同抬升支付意愿。</p>
+        </div>
+        <div class="insight">
+          <div class="k">产能释放</div>
+          <p>受精检测/性别分选可释放孵化产能，同固定资产出更多有效雏。</p>
+        </div>
+        <div class="insight">
+          <div class="k">品牌与合规</div>
+          <p>减少雄雏扑杀 → 动物福利标签、零售沟通、长期市场准入。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section id="s09">
+      <div class="sec-head">
+        <div class="sec-num">09</div>
+        <div>
+          <h2>发展路径</h2>
+          <p>2018 → 2028：每一步都在为下一步降低证明成本。</p>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 5 · 路径与融资对齐</div>
+        <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orbem发展路径时间线">
+          <rect width="760" height="420" fill="#fff"/>
+          <text x="380" y="28" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#0F1C2E">Orbem 发展路径：科研 → 法规市场 → 多国复制 → 果品 → 美国</text>
+          <!-- vertical line -->
+          <line x1="120" y1="50" x2="120" y2="390" stroke="#D5D0C6" stroke-width="2"/>
+          <!-- items -->
+          <g font-family="sans-serif">
+            <circle cx="120" cy="70" r="6" fill="#0E8F8A"/>
+            <text x="145" y="66" font-family="Georgia,serif" font-size="13" fill="#0E8F8A">2018–2019</text>
+            <text x="145" y="84" font-size="12" fill="#0F1C2E">团队国际认可；Orbem GmbH 成立；德国经济部 &gt;€1M，累计股权无关 €1.8M</text>
+
+            <circle cx="120" cy="120" r="6" fill="#0E8F8A"/>
+            <text x="145" y="116" font-family="Georgia,serif" font-size="13" fill="#0E8F8A">2020–2021</text>
+            <text x="145" y="134" font-size="12" fill="#0F1C2E">Genus 1.0 研发；首套进欧洲孵化场；EIC €2.5M；Pre-seed</text>
+
+            <circle cx="120" cy="170" r="6" fill="#0E8F8A"/>
+            <text x="145" y="166" font-family="Georgia,serif" font-size="13" fill="#0E8F8A">2022</text>
+            <text x="145" y="184" font-size="12" fill="#0F1C2E">Seed €5.2M；与 Vencomatic 战略合作；设备金融额度最高 €15M</text>
+
+            <circle cx="120" cy="220" r="6" fill="#0E8F8A"/>
+            <text x="145" y="216" font-family="Georgia,serif" font-size="13" fill="#0E8F8A">2023</text>
+            <text x="145" y="234" font-size="12" fill="#0F1C2E">Genus Focus 进入法国（监管驱动）；商业运营启动；Series A €30M</text>
+
+            <circle cx="120" cy="260" r="6" fill="#0E8F8A"/>
+            <text x="145" y="256" font-family="Georgia,serif" font-size="13" fill="#0E8F8A">2024–2025</text>
+            <text x="145" y="274" font-size="12" fill="#0F1C2E">进入德/荷/挪/瑞士/美；Series B €55.5M；休斯顿总部；团队 &gt;200</text>
+
+            <circle cx="120" cy="310" r="6" fill="#C47B3A"/>
+            <text x="145" y="306" font-family="Georgia,serif" font-size="13" fill="#C47B3A">2026</text>
+            <text x="145" y="324" font-size="12" fill="#0F1C2E">JimboFresh 西瓜首发；US 西瓜商业测算；媒体预告 2027 美国部署</text>
+
+            <circle cx="120" cy="360" r="6" fill="#C47B3A"/>
+            <text x="145" y="356" font-family="Georgia,serif" font-size="13" fill="#C47B3A">2027–2028</text>
+            <text x="145" y="374" font-size="12" fill="#0F1C2E">美国果品首批部署 → 官方预期更大范围采用（pay-per-scan）</text>
+          </g>
+        </svg>
+        <figcaption>图 5 · 关键判断：先打有强监管/渠道推力的市场，降低教育成本；果品带着工业可信度进入，而不是从 0 证明 MRI。</figcaption>
+      </figure>
+
+      <div class="two-col">
+        <div class="panel">
+          <h4>阶段逻辑</h4>
+          <ul>
+            <li><strong>0 科研品牌</strong>：竞赛与奖项建立可信度</li>
+            <li><strong>1 产品化</strong>：能不能扫、扫多快、进不进产线</li>
+            <li><strong>2 法规破局</strong>：in-ovo sexing 成为合规刚需</li>
+            <li><strong>3 规模复制</strong>：伙伴自动化 + OpEx + 多国</li>
+            <li><strong>4 横向品类</strong>：蛋 → 西瓜 → 牛油果 → 芒果/坚果</li>
+            <li><strong>5 美国放量</strong>：总部 + 媒体 + packer 模式</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>品类选择标准（从动作反推）</h4>
+          <ul>
+            <li>缺陷成本高（索赔、退货、品牌）</li>
+            <li>现有光学技术盲区大（深部问题）</li>
+            <li>单果/单批价值足以覆盖扫描费</li>
+            <li>人工技能依赖强（敲瓜、切检）且难招人</li>
+            <li>零售端品质不信任（牛油果“抽奖”感）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="s10">
+      <div class="sec-head">
+        <div class="sec-num">10</div>
+        <div>
+          <h2>为什么成体系、发展这么快</h2>
+          <p>把“快”拆成可管理的八条机制。</p>
+        </div>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-item">
+          <span class="n">01</span>
+          <h4>一个物理优势，多场景复用</h4>
+          <p>MRI 对富水软组织通用：蛋、果、坚果、健康共用同一成像原理，边际扩展成本低。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">02</span>
+          <h4>先监管刚需，再横向品类</h4>
+          <p>法/德/挪等雄雏政策打开家禽；合规付费意愿远高于“可选增效”。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">03</span>
+          <h4>硬件 + 伙伴 + AI 三线并进</h4>
+          <p>不单卖算法；绑定 Vencomatic/Prinzen 获得产线交付与融资杠杆。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">04</span>
+          <h4>冷启动可控的数据飞轮</h4>
+          <p>实验室几百样本起步，装机后现场数据持续喂模型，精度与说服力同步上升。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">05</span>
+          <h4>规则权归客户</h4>
+          <p>分级标准生产者定，输出匹配既有产线语言，降低替换阻力。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">06</span>
+          <h4>内容即市场准入</h4>
+          <p>技术对比文、白皮书、商业测算、客户访谈——先定义赛道评价标准，再卖自己。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">07</span>
+          <h4>交付成建制</h4>
+          <p>Imaging / AI / Applications / Field Ops / 24-7 Support 分设；工业客户买的是 uptime。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">08</span>
+          <h4>融资服务里程碑</h4>
+          <p>样机 → 首装 → 多国 → 果品首发 → 美国，资本节奏与证明成本对齐。</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>一句话本质：</strong>
+        Orbem 快，不是因为“发明了 MRI”，而是完成了一次完整的<strong>工业化翻译</strong>：
+        把医院工具翻译成产线工具，把伦理/监管压力翻译成付费订单，把扫描数据翻译成可分级的商业决策。
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="s11">
+      <div class="sec-head">
+        <div class="sec-num">11</div>
+        <div>
+          <h2>写入商业 BP 的对齐建议</h2>
+          <p>要 copy 体系方法，不是只 copy 传感器。</p>
+        </div>
+      </div>
+
+      <div class="bp-map">
+        <div class="bp-row">
+          <div>层级</div>
+          <div>Orbem 做法</div>
+          <div>我们应对齐的动作</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">物理层</div>
+          <div>锁定“内部水分/结构变化”这一物理优势</div>
+          <div>写清相对 NIR/HSI/X-ray 的不可替代测量量</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">产品层</div>
+          <div>Genus 命名体系 + 按场景 SKU</div>
+          <div>统一产品家族命名：一场景一型号一话术</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">工程层</div>
+          <div>产线节拍、数据对齐、安全、尺寸策略</div>
+          <div>先回答“能否跟线速”，再谈算法精度</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">模型层</div>
+          <div>几百样本冷启动 + 现场持续学习</div>
+          <div>定义每个新品的冷启动样本量与验收指标</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">商业层</div>
+          <div>OpEx/按扫描 + 客户自定义分级</div>
+          <div>用“节省模型”卖，而不是卖硬件参数</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">生态层</div>
+          <div>自动化伙伴 + 设备融资额度</div>
+          <div>绑定线体集成商，提供租赁/金融方案</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">市场层</div>
+          <div>法规市场优先；果品选高索赔品类</div>
+          <div>选 1 个政策/渠道强推场景做滩头阵地</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">内容层</div>
+          <div>对比文章 / 白皮书 / 案例 / 测算</div>
+          <div>先定义赛道评价标准，再销售方案</div>
+        </div>
+        <div class="bp-row">
+          <div class="bp-layer">服务层</div>
+          <div>Field Ops + 24/7 + 数据回传</div>
+          <div>工业客户买 uptime，不只是准确率</div>
+        </div>
+      </div>
+
+      <h3>建议的 BP 章节映射</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>BP 页</th><th>建议内容</th><th>本报告对应章节</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A 行业问题</td><td>损耗、索赔、抽检盲区</td><td>05 / 08</td></tr>
+            <tr><td>B 技术谱系</td><td>六技术对照 + 穿透对比</td><td>05</td></tr>
+            <tr><td>C 方案原理</td><td>MRI 三步 + AI 双角色</td><td>03</td></tr>
+            <tr><td>D 工业流程</td><td>产线四步 + 工程壁垒</td><td>04</td></tr>
+            <tr><td>E 产品矩阵</td><td>SKU 与缺陷清单</td><td>06</td></tr>
+            <tr><td>F 商业模式</td><td>OpEx + 节省模型</td><td>08</td></tr>
+            <tr><td>G 标杆案例</td><td>JimboFresh + Sirevåg</td><td>07</td></tr>
+            <tr><td>H 路径与壁垒</td><td>时间线 + 数据飞轮 + 伙伴</td><td>09 / 10</td></tr>
+            <tr><td>I 我们的策略</td><td>物理优势、滩头、定价、标杆</td><td>11</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="disclaimer">
+        <strong>引用注意：</strong>
+        部分公开数字口径不完全一致（例如 installations 官网/白皮书口径 vs FreshPlaza 访谈“约 25 套”）；
+        节省金额为模型上界，不是审计 ROI。写入 BP 时请标注数据时间与口径。
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="s12">
+      <div class="sec-head">
+        <div class="sec-num">12</div>
+        <div>
+          <h2>资料来源</h2>
+          <p>公开一手资料与行业报道，整理截止 2026-09-21。</p>
+        </div>
+      </div>
+      <footer>
+        <ol>
+          <li>Orbem — Comparing Available Technologies in Fruit Quality Control（2026-02-16）<br/><a href="https://www.orbem.ai/newsroom/fruits-comparing-existing-technologies-in-fruit-quality-control">https://www.orbem.ai/newsroom/fruits-comparing-existing-technologies-in-fruit-quality-control</a></li>
+          <li>Orbem — Technology / Genus · About / Milestones<br/><a href="https://www.orbem.ai/technology">https://www.orbem.ai/technology</a> · <a href="https://www.orbem.ai/about">https://www.orbem.ai/about</a></li>
+          <li>Orbem — Fruits / Nuts / Poultry / In-ovo / Fertilization / Health / Future<br/><a href="https://www.orbem.ai/fruits">https://www.orbem.ai/fruits</a> · <a href="https://www.orbem.ai/poultry-in-ovo-sexing">https://www.orbem.ai/poultry-in-ovo-sexing</a></li>
+          <li>Orbem — Behind the Scenes of AI-Powered MRI（2025-12-22）<br/><a href="https://www.orbem.ai/newsroom/behind-the-scenes-of-ai-powered-mri">https://www.orbem.ai/newsroom/behind-the-scenes-of-ai-powered-mri</a></li>
+          <li>Orbem — From Hospital to Hatchery: How We Automated MRI（2025-07-22）<br/><a href="https://www.orbem.ai/blog-from-hospital-to-hatchery-how-we-automated-mri/">https://www.orbem.ai/blog-from-hospital-to-hatchery-how-we-automated-mri/</a></li>
+          <li>Orbem — JimboFresh 首装新闻稿（2026-05-12）<br/><a href="https://www.orbem.ai/newsroom/fruits-jimbofresh-becomes-first-watermelon-producer-to-inspect-fruit-from-skin-to-core">https://www.orbem.ai/newsroom/fruits-jimbofresh-becomes-first-watermelon-producer-to-inspect-fruit-from-skin-to-core</a></li>
+          <li>Orbem — US Watermelon Business Case · Genus Focus White Paper<br/><a href="https://www.orbem.ai/us-watermelon-quality-control-genus-echo-business-case">https://www.orbem.ai/us-watermelon-quality-control-genus-echo-business-case</a></li>
+          <li>Orbem — Sirevåg 客户访谈（2026-04-28）· Vencomatic 合作（2022-05-31）<br/><a href="https://www.orbem.ai/newsroom/poultry-from-competitive-pressure-to-2-million-females-a-year-with-genus-focus">Sirevåg</a> · <a href="https://www.orbem.ai/newsroom/poultry-vencomatic-group-and-orbem-strategic-partnership">Vencomatic</a></li>
+          <li>The Packer — Industrial MRI Technology Plans to Eliminate Produce Guesswork by 2027（2026-07-01）<br/><a href="https://www.thepacker.com/news/industry/industrial-mri-technology-plans-eliminate-produce-guesswork-future-fruit-grading-20">https://www.thepacker.com/news/industry/industrial-mri-technology-plans-eliminate-produce-guesswork-future-fruit-grading-20</a></li>
+          <li>FreshPlaza — Johann Steinert 访谈（2025-10-31）<br/><a href="https://www.freshplaza.com/north-america/article/9780324/mri-technology-for-further-reducing-waste-and-improving-efficiency-in-avocado/">https://www.freshplaza.com/north-america/article/9780324/...</a></li>
+        </ol>
+        <p style="margin-top:20px">本报告为竞品与标杆调研材料，供商业 BP 内部使用。图表均为基于公开资料的再表达，非 Orbem 官方物料。</p>
+      </footer>
+    </section>
+  </main>
+</div>
+
+<script>
+  (function () {
+    var progress = document.getElementById('progress');
+    var side = document.getElementById('sideToc');
+    var tocBtn = document.getElementById('tocBtn');
+    var links = side ? side.querySelectorAll('a') : [];
+    var navLinks = document.querySelectorAll('.nav-links a');
+    var sections = document.querySelectorAll('main section');
+
+    function onScroll() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      if (progress) progress.style.width = p + '%';
+
+      var current = null;
+      sections.forEach(function (sec) {
+        var top = sec.getBoundingClientRect().top;
+        if (top <= 100) current = sec.id;
+      });
+      function mark(nodes) {
+        nodes.forEach(function (a) {
+          var href = a.getAttribute('href') || '';
+          if (current && href === '#' + current) a.classList.add('active');
+          else a.classList.remove('active');
+        });
+      }
+      mark(links);
+      mark(navLinks);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    if (tocBtn && side) {
+      tocBtn.addEventListener('click', function () {
+        var open = side.classList.toggle('open');
+        tocBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      links.forEach(function (a) {
+        a.addEventListener('click', function () {
+          side.classList.remove('open');
+          tocBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+  })();
+</script>
+</body>
+</html>

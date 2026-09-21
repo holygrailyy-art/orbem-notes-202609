@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbem 官网全站检查报告 · 信息架构与内容资产盘点</title>
+<style>
+  :root {
+    --ink: #0F1C2E;
+    --paper: #F7F4EE;
+    --paper-deep: #EFEAE1;
+    --signal: #0E8F8A;
+    --signal-soft: #D7EFED;
+    --amber: #C47B3A;
+    --amber-soft: #F3E6D6;
+    --haze: #5E6F7D;
+    --line: #D5D0C6;
+    --white: #fff;
+    --ok: #2F7D4A;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    font-size: 15.5px; line-height: 1.72; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono",Menlo,Consolas,monospace; font-variant-numeric: tabular-nums; }
+  #progress { position: fixed; top:0; left:0; height:3px; width:0; background: var(--signal); z-index:100; }
+  .topbar {
+    position: sticky; top:0; z-index:90;
+    background: rgba(247,244,238,.94); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin:0 auto; padding:12px 22px;
+    display:flex; gap:16px; align-items:center; justify-content:space-between;
+  }
+  .brand { font-family: Georgia,"Songti SC",serif; font-size:14px; }
+  .brand span { color: var(--signal); }
+  .nav { display:flex; flex-wrap:wrap; gap:2px 8px; justify-content:flex-end; }
+  .nav a { color:var(--haze); text-decoration:none; font-size:12px; padding:4px 6px; border-radius:4px; }
+  .nav a:hover, .nav a:focus-visible { color:var(--signal); background:var(--signal-soft); outline:none; }
+  .shell { max-width:1100px; margin:0 auto; padding:0 22px 72px; display:grid; grid-template-columns:190px 1fr; gap:36px; }
+  .side { position:sticky; top:70px; align-self:start; padding-top:36px; font-size:12px; }
+  .side ol { list-style:none; margin:0; padding:0; border-left:1px solid var(--line); }
+  .side a { display:block; padding:7px 0 7px 12px; color:var(--haze); text-decoration:none; }
+  .side a:hover, .side a.active { color:var(--signal); }
+  .side-label { font-family:Georgia,serif; font-size:11px; letter-spacing:.12em; color:var(--haze); margin:0 0 10px 12px; }
+  main { min-width:0; padding-top:20px; }
+  .hero {
+    margin:0 0 40px; padding:40px 32px 34px; color:#fff; border-radius:4px;
+    background: linear-gradient(145deg, var(--ink) 0%, #163048 100%);
+    position:relative; overflow:hidden;
+  }
+  .hero::after {
+    content:""; position:absolute; right:-30px; top:-30px; width:220px; height:220px;
+    border:1px solid rgba(14,143,138,.35); border-radius:50%;
+  }
+  .eyebrow { font-family:Georgia,serif; font-size:12px; letter-spacing:.14em; color:var(--signal); margin:0 0 14px; }
+  .hero h1 {
+    font-family:Georgia,"Songti SC",serif; font-weight:500;
+    font-size:clamp(26px,3.6vw,38px); line-height:1.28; margin:0 0 14px; max-width:16em;
+  }
+  .hero p { max-width:42em; color:rgba(255,255,255,.84); margin:0 0 22px; font-size:14.5px; }
+  .hero-meta { display:flex; flex-wrap:wrap; gap:16px 28px; border-top:1px solid rgba(255,255,255,.15); padding-top:18px; position:relative; z-index:1; }
+  .hero-meta strong { display:block; font-family:Georgia,serif; font-size:18px; }
+  .hero-meta span { font-size:12px; color:rgba(255,255,255,.6); }
+  section { margin-bottom:48px; scroll-margin-top:76px; }
+  .sec-head { display:grid; grid-template-columns:52px 1fr; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+  .sec-num { font-family:Georgia,serif; font-size:26px; color:var(--signal); line-height:1; padding-top:4px; }
+  .sec-head h2 { font-family:Georgia,"Songti SC",serif; font-weight:500; font-size:24px; margin:0 0 4px; }
+  .sec-head p { margin:0; color:var(--haze); font-size:13.5px; }
+  h3 { font-family:Georgia,"Songti SC",serif; font-weight:500; font-size:17px; margin:24px 0 10px; }
+  .lead { font-size:16px; color:#1C2F45; max-width:46em; }
+  .muted { color:var(--haze); font-size:13px; }
+  .callout { background:#fff; border-left:3px solid var(--signal); padding:16px 18px; margin:16px 0; }
+  .callout.warn { border-left-color:var(--amber); background:var(--amber-soft); }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0 22px; }
+  .stat { background:#fff; border:1px solid var(--line); padding:14px 12px; }
+  .stat .v { font-family:"SF Mono",Menlo,monospace; font-size:20px; display:block; margin-bottom:4px; line-height:1.2; }
+  .stat .l { font-size:12px; color:var(--haze); line-height:1.4; }
+  figure { margin:20px 0; background:#fff; border:1px solid var(--line); padding:18px 14px 12px; }
+  figure svg { display:block; width:100%; height:auto; }
+  figcaption { margin-top:10px; padding-top:8px; border-top:1px solid var(--line); font-size:12px; color:var(--haze); }
+  .fig-label { font-family:Georgia,serif; font-size:11px; letter-spacing:.1em; color:var(--signal); margin-bottom:8px; }
+  .table-wrap { overflow-x:auto; margin:14px 0 6px; }
+  table { width:100%; border-collapse:collapse; background:#fff; font-size:13px; min-width:560px; }
+  th,td { border:1px solid var(--line); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--ink); color:#fff; font-weight:500; font-size:12px; }
+  tr:nth-child(even) td { background:var(--paper); }
+  .tag { display:inline-block; font-size:11px; padding:2px 7px; border:1px solid var(--signal); color:var(--signal); }
+  .tag.ok { border-color:var(--ok); color:var(--ok); }
+  .tag.amber { border-color:var(--amber); color:var(--amber); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0; }
+  .panel { background:#fff; border:1px solid var(--line); padding:16px 18px; }
+  .panel h4 { margin:0 0 8px; font-family:Georgia,serif; font-size:14.5px; font-weight:500; }
+  .panel ul { margin:0; padding-left:16px; font-size:13.5px; }
+  .panel li { margin-bottom:5px; }
+  .quote { font-family:Georgia,"Songti SC",serif; font-size:14.5px; border-left:2px solid var(--signal); padding:4px 0 4px 12px; margin:12px 0; color:#1C2F45; }
+  .quote cite { display:block; margin-top:6px; font-style:normal; font-size:12px; color:var(--haze); }
+  .why { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+  .why-item { background:#fff; border:1px solid var(--line); padding:14px 16px; }
+  .why-item .n { font-family:"SF Mono",Menlo,monospace; font-size:11px; color:var(--signal); display:block; margin-bottom:4px; }
+  .why-item h4 { margin:0 0 6px; font-family:Georgia,serif; font-size:14.5px; font-weight:500; }
+  .why-item p { margin:0; font-size:13px; color:#1C2F45; }
+  .coverage { display:grid; gap:6px; margin:14px 0; }
+  .cov-row {
+    display:grid; grid-template-columns:220px 1fr 70px; gap:10px; align-items:center;
+    font-size:12.5px; background:#fff; border:1px solid var(--line); padding:8px 10px;
+  }
+  .cov-bar { height:10px; background:var(--paper-deep); border:1px solid var(--line); }
+  .cov-fill { height:100%; background:var(--signal); }
+  footer { margin-top:28px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; color:var(--haze); }
+  footer ol { padding-left:16px; }
+  footer a { color:var(--haze); word-break:break-all; }
+  .disclaimer { background:var(--paper-deep); border:1px dashed var(--line); padding:12px 14px; margin:16px 0; font-size:12.5px; color:var(--haze); }
+  @media (max-width:960px){
+    .shell{grid-template-columns:1fr;}.side{display:none;}
+    .nav{display:none;}
+    .stats,.grid2,.why{grid-template-columns:1fr;}
+    .cov-row{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Orbem Site Audit <span>· 全站检查</span></div>
+    <nav class="nav">
+      <a href="#s01">检查范围</a>
+      <a href="#s02">站点架构</a>
+      <a href="#s03">核心页解析</a>
+      <a href="#s04">新闻室盘点</a>
+      <a href="#s05">内容资产</a>
+      <a href="#s06">法务与组织</a>
+      <a href="#s07">关键增量事实</a>
+      <a href="#s08">体系洞察</a>
+      <a href="#s09">BP素材库</a>
+      <a href="#s10">缺口说明</a>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="side">
+    <div class="side-label">Contents</div>
+    <ol>
+      <li><a href="#s01">01 检查范围与方法</a></li>
+      <li><a href="#s02">02 站点信息架构</a></li>
+      <li><a href="#s03">03 核心页面逐页解析</a></li>
+      <li><a href="#s04">04 新闻室全量盘点</a></li>
+      <li><a href="#s05">05 内容资产体系</a></li>
+      <li><a href="#s06">06 法务·组织·招聘</a></li>
+      <li><a href="#s07">07 关键增量事实</a></li>
+      <li><a href="#s08">08 官网级体系洞察</a></li>
+      <li><a href="#s09">09 可用 BP 素材库</a></li>
+      <li><a href="#s10">10 未覆盖与口径说明</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <p class="eyebrow">Full Website Audit · orbem.ai · 2026-09-21</p>
+      <h1>Orbem 官网全站检查报告<br/>信息架构 · 内容资产 · 体系化沉淀</h1>
+      <p>
+        本报告不是“再写一篇竞品分析”，而是对 <strong>orbem.ai 全站</strong>逐页检查后的结构化沉淀：
+        导航结构、核心页、新闻室 5 页全部条目、落地页/白皮书/博客、法务与招聘信号，
+        以及这些页面如何共同构成他们的获客、信任与规模化体系。
+      </p>
+      <div class="hero-meta">
+        <div><strong>≥25</strong><span>已抓取核心 URL</span></div>
+        <div><strong>5页</strong><span>新闻室分页全覆盖</span></div>
+        <div><strong>~45+</strong><span>新闻/博客条目已登记</span></div>
+        <div><strong>12</strong><span>一级导航路径</span></div>
+        <div><strong>3</strong><span>法务合规页</span></div>
+      </div>
+    </div>
+
+    <!-- 01 -->
+    <section id="s01">
+      <div class="sec-head">
+        <div class="sec-num">01</div>
+        <div>
+          <h2>检查范围与方法</h2>
+          <p>这次不是抽样看亮点，而是按站点地图扫全。</p>
+        </div>
+      </div>
+      <p class="lead">
+        前一轮报告已覆盖产品与案例主干；本次补扫了此前未读的
+        <strong>首页、Careers、Contact、Legal Notice、Privacy、Responsible Disclosure、
+        新闻室第 2–5 页全部条目</strong>，以及 Series B、Capacity Burner、Why We Exist、
+        Hendrix 案例、US 7 Technologies、US Support、Impact 里程碑等关键正文。
+      </p>
+      <div class="coverage">
+        <div class="cov-row"><span>一级导航（Home/Careers/About/Newsroom + 7 Solutions）</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>产品/场景落地页</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>转化型落地页（业务测算/白皮书）</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>技术博客（原理/工业化）</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>新闻室列表（5 页条目）</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>新闻室正文（高价值文章已精读）</span><div class="cov-bar"><div class="cov-fill" style="width:70%"></div></div><span class="mono">~70%</span></div>
+        <div class="cov-row"><span>法务/合规页</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+        <div class="cov-row"><span>外部媒体转载页（The Packer/FreshPlaza）</span><div class="cov-bar"><div class="cov-fill" style="width:100%"></div></div><span class="mono">100%</span></div>
+      </div>
+      <div class="callout">
+        <strong>方法说明：</strong>
+        以公开可访问页面为准（HTML 文本层）。部分页含视频/HubSpot 表单/Drive 品牌资产包，
+        表单提交与 Drive 内容本报告不展开；动态职位列表挂在 Ashby，未逐条抓取 JD。
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section id="s02">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
+        <div>
+          <h2>站点信息架构</h2>
+          <p>官网本身就是他们的“产品目录 + 信任工厂 + 获客漏斗”。</p>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 1 · orbem.ai 信息架构</div>
+        <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orbem网站架构">
+          <rect width="760" height="420" fill="#fff"/>
+          <rect x="280" y="18" width="200" height="40" rx="4" fill="#0F1C2E"/>
+          <text x="380" y="43" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#7EC8C3">orbem.ai 首页</text>
+          <text x="380" y="78" text-anchor="middle" font-size="11" fill="#5E6F7D">Inside Out · OBJECT → SCAN → DATA</text>
+
+          <rect x="30" y="100" width="150" height="36" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="105" y="122" text-anchor="middle" font-size="12" fill="#0F1C2E">Poultry</text>
+          <rect x="30" y="146" width="150" height="36" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="105" y="168" text-anchor="middle" font-size="12" fill="#0F1C2E">In-ovo Sexing</text>
+          <rect x="30" y="192" width="150" height="36" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="105" y="214" text-anchor="middle" font-size="12" fill="#0F1C2E">Fertilization Status</text>
+          <rect x="30" y="238" width="150" height="36" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="105" y="260" text-anchor="middle" font-size="12" fill="#0F1C2E">Fruits / Genus Echo</text>
+          <rect x="30" y="284" width="150" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="105" y="306" text-anchor="middle" font-size="12" fill="#0F1C2E">Nuts</text>
+          <rect x="30" y="330" width="150" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="105" y="352" text-anchor="middle" font-size="12" fill="#0F1C2E">Health / Future</text>
+
+          <rect x="230" y="100" width="140" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="300" y="122" text-anchor="middle" font-size="12" fill="#0F1C2E">Technology</text>
+          <rect x="230" y="146" width="140" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="300" y="168" text-anchor="middle" font-size="12" fill="#0F1C2E">About</text>
+          <rect x="230" y="192" width="140" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="300" y="214" text-anchor="middle" font-size="12" fill="#0F1C2E">Newsroom×5页</text>
+          <rect x="230" y="238" width="140" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="300" y="260" text-anchor="middle" font-size="12" fill="#0F1C2E">Careers</text>
+          <rect x="230" y="284" width="140" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="300" y="306" text-anchor="middle" font-size="12" fill="#0F1C2E">Contact</text>
+
+          <rect x="420" y="100" width="300" height="36" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="570" y="122" text-anchor="middle" font-size="12" fill="#0F1C2E">US Watermelon Business Case</text>
+          <rect x="420" y="146" width="300" height="36" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="570" y="168" text-anchor="middle" font-size="12" fill="#0F1C2E">In-Ovo White Paper（HubSpot）</text>
+          <rect x="420" y="192" width="300" height="36" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="570" y="214" text-anchor="middle" font-size="12" fill="#0F1C2E">Resource Hub · 5语言 Fruit Leaflet</text>
+          <rect x="420" y="238" width="300" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="570" y="260" text-anchor="middle" font-size="12" fill="#0F1C2E">Newsroom Resource · Brand/Press Drive</text>
+          <rect x="420" y="284" width="300" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="570" y="306" text-anchor="middle" font-size="12" fill="#0F1C2E">Legal / Privacy / Security RDP</text>
+          <rect x="420" y="330" width="300" height="36" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="570" y="352" text-anchor="middle" font-size="12" fill="#0F1C2E">Ashby 招聘 · LinkedIn/Glassdoor/Kununu</text>
+
+          <text x="380" y="400" text-anchor="middle" font-size="12" fill="#5E6F7D">Solutions 负责“卖什么” · Company 负责“为什么信” · Newsroom/Resource 负责“怎么转化”</text>
+        </svg>
+        <figcaption>图 1 · 官网不是宣传册，而是三层漏斗：场景页 → 信任页 → 转化资产（测算、白皮书、多语言单页）。</figcaption>
+      </figure>
+
+      <h3>2.1 一级导航与路径清单（已检查）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>路径</th><th>类型</th><th>检查状态</th><th>页面职责</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">/</td><td>首页</td><td><span class="tag ok">已读</span></td><td>品牌叙事 + 四场景入口 + 影响力</td></tr>
+            <tr><td class="mono">/technology</td><td>产品平台</td><td><span class="tag ok">已读</span></td><td>MRI×AI 原理 + Genus 家族 + 三支柱</td></tr>
+            <tr><td class="mono">/about</td><td>公司</td><td><span class="tag ok">已读</span></td><td>里程碑、团队职能、奖项</td></tr>
+            <tr><td class="mono">/careers</td><td>招聘</td><td><span class="tag ok">已读</span></td><td>价值观、ESOP、DE/US 福利、招聘流程</td></tr>
+            <tr><td class="mono">/contact</td><td>转化</td><td><span class="tag ok">已读</span></td><td>线索表单</td></tr>
+            <tr><td class="mono">/poultry</td><td>场景</td><td><span class="tag ok">已读</span></td><td>家禽总览 + Vencomatic 合作</td></tr>
+            <tr><td class="mono">/poultry-in-ovo-sexing</td><td>SKU</td><td><span class="tag ok">已读</span></td><td>Genus Focus + FAQ + 客户证言</td></tr>
+            <tr><td class="mono">/poultry-fertilization-status-detection</td><td>SKU</td><td><span class="tag ok">已读</span></td><td>Genus Scale + 20% 产能叙事</td></tr>
+            <tr><td class="mono">/fruits</td><td>SKU</td><td><span class="tag ok">已读</span></td><td>Genus Echo + 缺陷库 + JimboFresh</td></tr>
+            <tr><td class="mono">/nuts</td><td>SKU</td><td><span class="tag ok">已读</span></td><td>坚果 QA/QC 场景</td></tr>
+            <tr><td class="mono">/health</td><td>愿景</td><td><span class="tag ok">已读</span></td><td>健康洞察起点（尚未深产品化）</td></tr>
+            <tr><td class="mono">/future-solutions</td><td>愿景</td><td><span class="tag ok">已读</span></td><td>共创邀请</td></tr>
+            <tr><td class="mono">/newsroom</td><td>内容中心</td><td><span class="tag ok">已读5页</span></td><td>PR/博客/案例/政策解读</td></tr>
+            <tr><td class="mono">/us-watermelon-quality-control-genus-echo-business-case</td><td>转化</td><td><span class="tag ok">已读</span></td><td>美国西瓜经济模型</td></tr>
+            <tr><td class="mono">/in-ovo-sexing-white-paper-genus-focus</td><td>转化</td><td><span class="tag ok">已读</span></td><td>白皮书下载门控</td></tr>
+            <tr><td class="mono">/legal-notice · /privacy-policy · /responsible-disclosure-policy</td><td>合规</td><td><span class="tag ok">已读</span></td><td>公司主体、数据、安全披露</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section id="s03">
+      <div class="sec-head">
+        <div class="sec-num">03</div>
+        <div>
+          <h2>核心页面逐页解析</h2>
+          <p>每一页在体系里承担什么角色，而不是只摘金句。</p>
+        </div>
+      </div>
+
+      <h3>3.1 首页 <span class="mono">/</span></h3>
+      <div class="panel" style="margin-bottom:12px">
+        <h4>Hero 叙事结构</h4>
+        <ul>
+          <li>主标：“The world gets better when you see it from the inside out”</li>
+          <li>副标：AI-powered MRI uncovers what is hidden deep beneath the surface</li>
+          <li>视觉隐喻固定为三层：<strong>OBJECT → SCAN → DATA</strong>（首页用牛油果）</li>
+          <li>同一隐喻在 Poultry/Fruits/Nuts 页复用（蛋/西瓜/核桃）——品牌记忆锚点</li>
+        </ul>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <h4>Solutions 入口</h4>
+          <ul>
+            <li>Poultry：非侵入判定性别与受精</li>
+            <li>Fruits：包装前检测内部缺陷</li>
+            <li>Nuts：变形/变色/脱水等</li>
+            <li>Health：此前难以获得的健康洞察</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>Impact 三块</h4>
+          <ul>
+            <li>For People：2050 年 100 亿人口的可负担营养</li>
+            <li>For the Planet：收获—零售间损失 &gt;12.5 亿吨</li>
+            <li>For Progress：用彻底透明重塑信息获取标准</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>3.2 Technology / About</h3>
+      <div class="grid2">
+        <div class="panel">
+          <h4>Technology 页</h4>
+          <ul>
+            <li>产品家族命名 <strong>Genus</strong></li>
+            <li>三支柱：Fast / Accessible / Simple</li>
+            <li>AI 被称为“operation 的大脑”，训练于“正在成为世界最大生物数据集”</li>
+            <li>明确强调“real industrial insight requires complete automation”</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>About 页</h4>
+          <ul>
+            <li>成立 2019；团队 &gt;200；慕尼黑 + 休斯顿</li>
+            <li>2018–2025 里程碑时间线完整</li>
+            <li>20+ 职能团队全部列出（Imaging/AI/Applications/Field Ops…）</li>
+            <li>奖项墙从 2018 TUM Ideaward 到 2025 Sifted AI 100</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>3.3 场景 SKU 页（Poultry / In-ovo / Fertilization / Fruits / Nuts）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>页面</th><th>核心主张</th><th>硬指标/证据</th><th>转化钩子</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Poultry</td>
+              <td>更高效、更人道、更可持续</td>
+              <td>Vencomatic 战略合作；Genus 模块化</td>
+              <td>Newsletter + Contact</td>
+            </tr>
+            <tr>
+              <td>In-ovo Sexing</td>
+              <td>工业规模非侵入性别判定</td>
+              <td>精度 &lt;1% MinH；3,275 蛋/h/模块；11 场 / 6 国；&gt;2 亿枚</td>
+              <td>White Paper + 客户证言 + FAQ</td>
+            </tr>
+            <tr>
+              <td>Fertilization Status</td>
+              <td>孵前剔除未受精，释放产能</td>
+              <td>最高 20% 孵化产能；8–20% 未受精比例</td>
+              <td>Capacity Burner 文章链</td>
+            </tr>
+            <tr>
+              <td>Fruits</td>
+              <td>从皮到芯的非破坏分级</td>
+              <td>JimboFresh 首装；缺陷库；44,000 lb/h 测算页</td>
+              <td>Business Case + 多语言 Leaflet</td>
+            </tr>
+            <tr>
+              <td>Nuts</td>
+              <td>内部霉变/虫蛀/裂纹</td>
+              <td>QA/QC 双场景表述</td>
+              <td>Contact（商业化程度最低）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3.4 转化资产页</h3>
+      <div class="callout warn">
+        <strong>两个“销售武器库”页面：</strong><br/>
+        1）<span class="mono">US Watermelon Business Case</span>：把 3.5%→1% 拒收率写成可计算的钱（≈$70万/季上界模型），并诚实列出未计入项；<br/>
+        2）<span class="mono">In-Ovo White Paper</span>：用 0.8s、1% MinH、3–8% 孵化死亡率等工业基准做门控下载（HubSpot 表单）。
+      </div>
+
+      <h3>3.5 Careers 页（此前未展开）</h3>
+      <div class="stats">
+        <div class="stat"><span class="v">&gt;200</span><span class="l">团队成员</span></div>
+        <div class="stat"><span class="v">&gt;40</span><span class="l">国籍</span></div>
+        <div class="stat"><span class="v">41%</span><span class="l">女性员工占比</span></div>
+        <div class="stat"><span class="v">ESOP</span><span class="l">全员持股计划</span></div>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <h4>价值观三条</h4>
+          <ul>
+            <li>We own every challenge</li>
+            <li>We strive for better</li>
+            <li>We imagine new frontiers</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>招聘流程三步</h4>
+          <ul>
+            <li>Introductory call（角色/薪酬/下一步）</li>
+            <li>Challenge（贴近真实工作的任务，考察 inside-out thinking）</li>
+            <li>Interview day（culture / team / potential）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>地区</th><th>代表性福利（摘录）</th><th>信号意义</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>德国</td>
+              <td>L&amp;D €1,750/年；WFH 补贴 €185；30 天年假；Work from Anywhere 60 天/年；Deutschand Ticket；Kita 报销；养老金</td>
+              <td>慕尼黑深科技人才竞争配置已工业化</td>
+            </tr>
+            <tr>
+              <td>美国</td>
+              <td>25 天 PTO + 8 公共假日；医疗 75%（家属 50%）；401k 100% match 至 5%；L&amp;D $2,000/年；内推 $550–$2,200；休斯顿搬迁支持</td>
+              <td>休斯顿不是“销售点”，是完整交付与支持基地</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section id="s04">
+      <div class="sec-head">
+        <div class="sec-num">04</div>
+        <div>
+          <h2>新闻室全量盘点</h2>
+          <p>5 页分页、约 45+ 条目：他们如何用内容“定义赛道”。</p>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 2 · 新闻室内容类型结构</div>
+        <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="新闻室内容类型">
+          <rect width="760" height="300" fill="#fff"/>
+          <text x="380" y="28" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#0F1C2E">Newsroom 内容矩阵（按功能，非按时间）</text>
+          <rect x="40" y="50" width="200" height="70" rx="3" fill="#0F1C2E"/>
+          <text x="140" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#7EC8C3">Press Releases</text>
+          <text x="140" y="100" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.75)">融资 / 客户装机 / 合作</text>
+          <rect x="260" y="50" width="200" height="70" rx="3" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="360" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#0F1C2E">Customer Stories</text>
+          <text x="360" y="100" text-anchor="middle" font-size="11" fill="#5E6F7D">Hendrix / Sirevåg / Pluriton</text>
+          <rect x="480" y="50" width="240" height="70" rx="3" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="600" y="80" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#0F1C2E">Thought Leadership</text>
+          <text x="600" y="100" text-anchor="middle" font-size="11" fill="#5E6F7D">技术对比 / 政策 / 7 Tech</text>
+          <rect x="40" y="140" width="200" height="70" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="140" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#0F1C2E">Tech Education</text>
+          <text x="140" y="190" text-anchor="middle" font-size="11" fill="#5E6F7D">MRI 原理 / 自动化</text>
+          <rect x="260" y="140" width="200" height="70" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="360" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#0F1C2E">Milestones</text>
+          <text x="360" y="190" text-anchor="middle" font-size="11" fill="#5E6F7D">1亿蛋 / Series A&amp;B / 奖项</text>
+          <rect x="480" y="140" width="240" height="70" rx="3" fill="#fff" stroke="#D5D0C6"/>
+          <text x="600" y="170" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#0F1C2E">Culture / Employer Brand</text>
+          <text x="600" y="190" text-anchor="middle" font-size="11" fill="#5E6F7D">职业成长 / Why we exist</text>
+          <text x="380" y="250" text-anchor="middle" font-size="12" fill="#5E6F7D">分类筛选：Company / Health / Fruits / Poultry / Press Releases / News</text>
+          <text x="380" y="272" text-anchor="middle" font-size="12" fill="#0E8F8A">另附 Resource Center：Brand assets + Press assets（Google Drive）</text>
+        </svg>
+        <figcaption>图 2 · 内容不是“发新闻”，而是六类资产协同：证明、教育、定义标准、雇主打品牌、里程碑放大。</figcaption>
+      </figure>
+
+      <h3>4.1 新闻室条目时间线（列表级全量登记）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>日期</th><th>标题</th><th>类型</th><th>要点</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">2026-08-25</td><td>Building Trust in the U.S. · 24/7 Support</td><td>案例/运营</td><td>休斯顿 TCS；PagerDuty；已 2 套美国 Genus Focus</td></tr>
+            <tr><td class="mono">2026-08-10</td><td>Focus on doors opening…</td><td>雇主品牌</td><td>员工职业成长</td></tr>
+            <tr><td class="mono">2026-07-17</td><td>New EU Livestock Strategy</td><td>政策解读</td><td>2026 末前修订蛋/肉鸡福利规则，终结系统性雄雏扑杀</td></tr>
+            <tr><td class="mono">2026-07-01</td><td>Industrial MRI … by 2027（The Packer）</td><td>行业媒体</td><td>美国 2027 初部署；OpEx 按磅扫描</td></tr>
+            <tr><td class="mono">2026-06-12</td><td>JimboFresh CEO 访谈（ValenciaFruits）</td><td>客户证言</td><td>为何选择 Orbem</td></tr>
+            <tr><td class="mono">2026-05-12</td><td>JimboFresh 首个鲜果商业装机</td><td>Press Release</td><td>&gt;38,000 吨西瓜；2026 产季</td></tr>
+            <tr><td class="mono">2026-04-28</td><td>Sirevåg · 2M females/year</td><td>客户案例</td><td>挪威溢价市场；€4M；雄雏率 0.5%</td></tr>
+            <tr><td class="mono">2026-04-17</td><td>Don’t wait for a seat at the table</td><td>雇主品牌</td><td>职业发展</td></tr>
+            <tr><td class="mono">2026-03-24</td><td>7 Technologies Redefining US Hatchery 2026</td><td>思想领导</td><td>把 Genus Scale/Focus 置于美国孵化场 7 大杠杆之首</td></tr>
+            <tr><td class="mono">2026-02-24</td><td>The Capacity Burner</td><td>思想领导</td><td>未受精蛋经济学；8–20%；孵后法律上是废料</td></tr>
+            <tr><td class="mono">2026-02-16</td><td>Comparing Technologies in Fruit QC</td><td>赛道定义</td><td>NIR/HSI/MWS/THz/MRI 全对比</td></tr>
+            <tr><td class="mono">2026-01-20</td><td>Series B €55.5M</td><td>Press Release</td><td>Innovation Industries 领投；已盈利；生物数据集</td></tr>
+            <tr><td class="mono">2025-12-22</td><td>Behind the Scenes of AI-Powered MRI</td><td>技术教育</td><td>MRI+AI 双角色深拆</td></tr>
+            <tr><td class="mono">2025-11-26</td><td>The Intelligent Egg（Pluriton）</td><td>经济价值</td><td>蛋分析带来的长期运营/市场/遗传优势</td></tr>
+            <tr><td class="mono">2025-10-31</td><td>Avocado MRI（FreshPlaza）</td><td>行业媒体</td><td>~200 人；~25 装机；几百样本冷启动</td></tr>
+            <tr><td class="mono">2025-09-23</td><td>Hendrix Genetics 德国改造</td><td>深度案例</td><td>3,200 蛋/h/模块；孵化率 91.8%→95.7%；&lt;1% 雄</td></tr>
+            <tr><td class="mono">2025-08-26</td><td>Hatch Check &amp; US egg production</td><td>政策/行业</td><td>United Egg Producers 访谈</td></tr>
+            <tr><td class="mono">2025-07-22</td><td>Hospital to Hatchery · Automated MRI</td><td>技术教育</td><td>蛋链/非金属/速度-画质</td></tr>
+            <tr><td class="mono">2025-05-26</td><td>Story of Fertilization Status Detector</td><td>产品叙事</td><td>每年可“拯救”约 100 亿枚蛋</td></tr>
+            <tr><td class="mono">2025-05-15</td><td>Impact of In-Ovo Sexing · 100M eggs</td><td>里程碑</td><td>1 亿枚扫描 → 约 3800 万只蛋鸡</td></tr>
+            <tr><td class="mono">2025-04-02</td><td>US Bird Flu Call to Action</td><td>行业议题</td><td>疫苗/监测/数据可见性</td></tr>
+            <tr><td class="mono">2025-03-21</td><td>Genus Focus &amp; end of culling in NL</td><td>市场驱动</td><td>荷兰行业拥抱伦理蛋生产</td></tr>
+            <tr><td class="mono">2025-01-23</td><td>Wimex installs Genus Scale</td><td>Press Release</td><td>受精检测首装方向</td></tr>
+            <tr><td class="mono">2024-10-30</td><td>Switzerland sector-wide initiative</td><td>Press Release</td><td>瑞士行业级引入 Genus Focus</td></tr>
+            <tr><td class="mono">2024-10-15</td><td>Bavarian Innovation Award</td><td>奖项</td><td>家禽影响</td></tr>
+            <tr><td class="mono">2024-09-13</td><td>Pluriton full automation value</td><td>客户案例</td><td>自动化带来的效率</td></tr>
+            <tr><td class="mono">2024-07-04</td><td>Genus Focus arrives in Norway</td><td>Press Release</td><td>Sirevåg；2025 初可提供非侵入方案</td></tr>
+            <tr><td class="mono">2024-06-11</td><td>Omelette Project（蛋鸡长寿）</td><td>研发生态</td><td>Interreg NWE</td></tr>
+            <tr><td class="mono">2024-05-10</td><td>Hendrix Genetics Germany 装机</td><td>Press Release</td><td>服务德/荷市场</td></tr>
+            <tr><td class="mono">2024-05-02</td><td>Ter Heerdt &amp; Verbeek（NL）</td><td>Press Release</td><td>1200 万雏/年孵化场；KAT 认证</td></tr>
+            <tr><td class="mono">2023-11-20</td><td>Pluriton + Orbem + Vencomatic</td><td>Press Release</td><td>荷兰/比利时合作</td></tr>
+            <tr><td class="mono">2023-11-01</td><td>LOHMANN Deutschland · Dorum</td><td>Press Release</td><td>德国首套 Genus Focus</td></tr>
+            <tr><td class="mono">2023-10-20</td><td>We Revolutionize Poultry</td><td>品牌叙事</td><td>蛋壳背后的 Orbem</td></tr>
+            <tr><td class="mono">2023-10-11</td><td>Series A €30M</td><td>Press Release</td><td>AI-powered imaging for everything</td></tr>
+            <tr><td class="mono">2023-05-24</td><td>Animal Welfare Standards alignment</td><td>合规证据</td><td>德国研究：D13 前无痛觉</td></tr>
+            <tr><td class="mono">2022-05-31</td><td>Vencomatic Strategic Partnership</td><td>Press Release</td><td>最高 €15M 设备金融；峰值 24k 蛋/h 方案</td></tr>
+            <tr><td class="mono">2022-03-24</td><td>Hendrix Genetics MRI in-ovo launch</td><td>Press Release</td><td>高吞吐非侵入方案全球发布</td></tr>
+            <tr><td class="mono">2022-03-23</td><td>Deep Tech — Next Frontier</td><td>思想领导</td><td>为什么 deep tech 能改变世界</td></tr>
+            <tr><td class="mono">2021-12-20</td><td>Let’s Imagine New Frontiers</td><td>愿景</td><td>可持续健康未来</td></tr>
+            <tr><td class="mono">2021-11-15</td><td>Why We Exist</td><td>起源故事</td><td>TUM 三位科学家；三大信念</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">注：上表为 5 页列表条目 + 已精读正文的合并台账；部分更早/更细客户稿未全部展开正文，但列表级已登记。</p>
+    </section>
+
+    <!-- 05 -->
+    <section id="s05">
+      <div class="sec-head">
+        <div class="sec-num">05</div>
+        <div>
+          <h2>内容资产体系</h2>
+          <p>他们如何把“懂行业”做成可下载、可转发、可销售的资产。</p>
+        </div>
+      </div>
+
+      <div class="why">
+        <div class="why-item">
+          <span class="n">ASSET 01</span>
+          <h4>赛道定义文</h4>
+          <p>果品质控六技术对比：先教育市场，再把评价标准锚定在穿透×分辨率×产线集成，最终指向 MRI。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">ASSET 02</span>
+          <h4>经济模型页</h4>
+          <p>US 西瓜 Business Case：把“看不见的内部”翻译成运费、货值、QC、索赔四条账。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">ASSET 03</span>
+          <h4>工业白皮书</h4>
+          <p>Genus Focus 运行基准：0.8s、1% MinH、孵化死亡率 3–8%，用门控下载换线索。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">ASSET 04</span>
+          <h4>客户深度案例</h4>
+          <p>Hendrix（改造+产线数字）、Sirevåg（商业模式+监管溢价）、Pluriton（自动化价值）。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">ASSET 05</span>
+          <h4>政策解读内容</h4>
+          <p>EU Livestock Strategy / Hatch Check / 荷兰禁扑杀：把监管变化写成“我们的技术已就绪”。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">ASSET 06</span>
+          <h4>多语言产品物料</h4>
+          <p>Fruit leaflet 英/德/西/意/希五语；Newsroom 另有 Brand/Press Drive 包。</p>
+        </div>
+      </div>
+
+      <h3>5.1 极其成熟的一招：把自己写进行业标准清单</h3>
+      <div class="callout">
+        <strong>《7 Technologies Redefining the US Hatchery in 2026》</strong>
+        并不是纯自夸文：它同时引用 Petersime、Jamesway、Zoetis、Ceva、Innovatec、Barnwell Bio 等生态伙伴/竞品技术，
+        像一份美国孵化场现代化清单，却把 <strong>Genus Scale（孵前受精检测）与 Genus Focus（in-ovo sexing）</strong>
+        放在最前置的杠杆位置。这是典型的“定义采购清单”型内容营销。
+      </div>
+
+      <h3>5.2 叙事母题反复复用</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>母题</th><th>出现位置</th><th>作用</th></tr></thead>
+          <tbody>
+            <tr><td>Inside Out / see from the inside out</td><td>首页、页脚、About、Series B</td><td>品牌一句话</td></tr>
+            <tr><td>OBJECT → SCAN → DATA</td><td>首页、Poultry、Fruits、Nuts</td><td>产品认知锚</td></tr>
+            <tr><td>Guesswork → Precision / Data</td><td>果品页、JimboFresh、The Packer</td><td>品类升级叙事</td></tr>
+            <tr><td>Fast / Accessible / Simple</td><td>Technology、Health、Future</td><td>工业化三支柱</td></tr>
+            <tr><td>World’s largest biological dataset</td><td>Technology、Series B、About</td><td>数据护城河</td></tr>
+            <tr><td>Reduce waste · welfare · transparency</td><td>全站</td><td>ESG 与商业同向</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section id="s06">
+      <div class="sec-head">
+        <div class="sec-num">06</div>
+        <div>
+          <h2>法务 · 组织 · 招聘信号</h2>
+          <p>从 Impressum 与 Privacy 读出“这是一家怎样的公司”。</p>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h4>Legal Notice（公司主体）</h4>
+          <ul>
+            <li>主体：Orbem GmbH</li>
+            <li>地址：Wilhelmine-Reichard-Str. 7, 2.OG Büro 9231, 80935 München</li>
+            <li>董事：Dr. Pedro Gomez、Dr. Maria Laparidou、Dr. Miguel Molina</li>
+            <li>商事登记：Amtsgericht München · <span class="mono">HRB 252715</span></li>
+            <li>VAT：<span class="mono">DE327553341</span></li>
+            <li>邮箱：hello@orbem.ai</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>Privacy Policy 关键信号</h4>
+          <ul>
+            <li>生效日：2025-06-22</li>
+            <li>已设 DPO；数据主体欧盟为主存储</li>
+            <li>明确写营收来源：<strong>paid subscriptions, imaging hardware sales and professional services</strong></li>
+            <li>不卖个人数据；AI 训练需明确同意，不用可识别数据训练</li>
+            <li>覆盖 GDPR + CCPA + Texas 相关法规——与休斯顿实体对应</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>Responsible Disclosure Policy：</strong>
+        有完整德式安全披露政策（security@orbem.ai）：72h 确认、10 工作日状态更新；
+        禁止未授权渗透测试；依据德国刑法与慕尼黑法院管辖。
+        这说明他们把“工业客户信任 + 软件/数据资产安全”写进了公司制度层，而不仅是销售话术。
+      </div>
+
+      <h3>6.1 组织能力在官网上的“全露出”</h3>
+      <p>
+        About 页团队职能 + Careers 页福利 + Newsroom 的 Field Ops / TCS 访谈，三处互相印证：
+        Orbem 的交付不是“科研团队顺带装机”，而是 <strong>Hardware / Imaging / AI / Applications / Software / QE /
+        Infrastructure / Field Operations / Customer Support / Procurement / OpsEx / BI / BD</strong> 的完整工业组织。
+      </p>
+    </section>
+
+    <!-- 07 -->
+    <section id="s07">
+      <div class="sec-head">
+        <div class="sec-num">07</div>
+        <div>
+          <h2>关键增量事实</h2>
+          <p>本次全站检查新读到、此前报告未充分展开的硬信息。</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="v">€55.5M</span><span class="l">Series B · 2026-01-20<br/>Innovation Industries 领投</span></div>
+        <div class="stat"><span class="v">已盈利</span><span class="l">Series B 稿自述<br/>Already profitable</span></div>
+        <div class="stat"><span class="v">170M→2亿+</span><span class="l">蛋扫描量口径<br/>B轮稿 vs 现官网</span></div>
+        <div class="stat"><span class="v">3,200/h</span><span class="l">Hendrix 案例<br/>蛋/模块/小时</span></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>事实</th><th>来源页</th><th>对体系的含义</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>创始三人组均与 TUM 相关：Pedro（加速 MRI / 生物医学影像 PhD）、Miguel（成像 AI 模型）、Maria（生物/胚胎学）</td>
+              <td>Why We Exist</td>
+              <td>技术栈从第一天就覆盖“硬件加速 × AI × 生物学”，不是单点算法公司</td>
+            </tr>
+            <tr>
+              <td>三大信念：影像将快/简/便宜到无处不在；AI 洞察超人类；Translational AI（everything 使能 everyone）</td>
+              <td>Why We Exist</td>
+              <td>解释了为何蛋→果→健康不是“乱扩品类”，而是同一信念的产品化路径</td>
+            </tr>
+            <tr>
+              <td>Series B 用途四条：美国市场、家禽扩产、果蔬新垂直、医疗愿景；并强调 Vertical AI + 专有生物数据集</td>
+              <td>Series B PR</td>
+              <td>资本叙事与官网产品矩阵完全对齐</td>
+            </tr>
+            <tr>
+              <td>投资方：Innovation Industries（领投，€1B AUM）、Supernova Invest（€800M，Amundi+CEA 背景）；既有 General Catalyst、83North 等跟投</td>
+              <td>Series B PR</td>
+              <td>欧洲 deep tech 资本体系背书，不是单一财务 VC</td>
+            </tr>
+            <tr>
+              <td>欧盟策略：2026 年底前修订蛋鸡/肉鸡福利规则，明确“结束系统性雄雏扑杀”</td>
+              <td>EU Livestock Strategy</td>
+              <td>家禽市场从“可选伦理”变成“合规刚需”的时间表被写进欧盟文件</td>
+            </tr>
+            <tr>
+              <td>未受精蛋：8–20% 进入孵化器；孵后按 EC 853/2004 属废料；孵前则可作工业/破壳蛋商品</td>
+              <td>Capacity Burner</td>
+              <td>Genus Scale 的卖点被法律与商品逻辑双重支撑</td>
+            </tr>
+            <tr>
+              <td>Hendrix 德国：老厂房改造（地板/冷却/IT）；市政水冷却备份；3 模块 9,600 蛋/h；孵化率升至 95.7%</td>
+              <td>Hendrix Case</td>
+              <td>他们卖的不是设备，是“从厂房改造到产线达产”的交钥匙工程</td>
+            </tr>
+            <tr>
+              <td>美国支持体系：TCS 轮班衔接欧洲；PagerDuty 值班；Field Ops/Application/BD 分头出差；共享工单 + Airtable</td>
+              <td>US Support 访谈</td>
+              <td>美国扩张的瓶颈被明确识别为“信任与 uptime”，而非算法</td>
+            </tr>
+            <tr>
+              <td>Privacy 写明营收：订阅 + 影像硬件销售 + 专业服务</td>
+              <td>Privacy Policy</td>
+              <td>商业模式比对外话术更完整：并非只有 pay-per-scan</td>
+            </tr>
+            <tr>
+              <td>Careers：&gt;40 国籍、41% 女性、全员 ESOP、德/美完整福利包</td>
+              <td>Careers</td>
+              <td>人才体系与规模化交付同步建设</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote class="quote">
+        “We're the first and so far only company in the world to demonstrate the use of MRI in less than one second and without humans in the loop.”
+        <cite>— Dr. Pedro Gómez, CEO · Series B 新闻稿 2026-01-20</cite>
+      </blockquote>
+
+      <blockquote class="quote">
+        “Orbem earns revenue from paid subscriptions, imaging hardware sales and professional services. We do not sell or rent your personal data; our commercial interest lies in delivering products worth paying for.”
+        <cite>— Privacy Policy · 2025-06-22</cite>
+      </blockquote>
+    </section>
+
+    <!-- 08 -->
+    <section id="s08">
+      <div class="sec-head">
+        <div class="sec-num">08</div>
+        <div>
+          <h2>官网级体系洞察</h2>
+          <p>把“每个地方都看过”之后，他们真正的护城河是什么。</p>
+        </div>
+      </div>
+
+      <div class="why">
+        <div class="why-item">
+          <span class="n">01</span>
+          <h4>官网 = 产品操作系统</h4>
+          <p>Solutions 定义场景，Company 建立信任，Newsroom 定义标准，Resource/Whitepaper 完成转化，Careers 补给交付能力。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">02</span>
+          <h4>同一套视觉语法贯穿全站</h4>
+          <p>OBJECT→SCAN→DATA 在首页与各场景页复用；玻璃质感 3D 物体是品牌签名，降低跨品类认知成本。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">03</span>
+          <h4>政策内容前置</h4>
+          <p>每次欧盟/国家法规变化都有解读文，把 Orbem 写成“监管目标的现成技术答案”。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">04</span>
+          <h4>案例写到工程细节</h4>
+          <p>Hendrix 文写地板、冷却水、IT、团队稳定——工业客户要的是可复制交付，不是 demo 视频。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">05</span>
+          <h4>数据集被写成终局资产</h4>
+          <p>Series B、Technology、Why We Exist 都指向同一句话：生物数据集是未来健康与食品 AI 的地基。</p>
+        </div>
+        <div class="why-item">
+          <span class="n">06</span>
+          <h4>交付组织公开化</h4>
+          <p>Support/Field Ops/24-7/PagerDuty 被主动写出来，降低大客户对 deep tech“会不会跑路”的顾虑。</p>
+        </div>
+      </div>
+
+      <figure>
+        <div class="fig-label">Figure 3 · 官网如何服务商业闭环</div>
+        <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="官网商业闭环">
+          <rect width="760" height="280" fill="#fff"/>
+          <rect x="30" y="90" width="140" height="56" rx="4" fill="#0F1C2E"/>
+          <text x="100" y="114" text-anchor="middle" font-size="12" fill="#7EC8C3">认知</text>
+          <text x="100" y="132" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.75)">首页/场景页</text>
+          <rect x="200" y="90" width="140" height="56" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+          <text x="270" y="114" text-anchor="middle" font-size="12" fill="#0F1C2E">教育</text>
+          <text x="270" y="132" text-anchor="middle" font-size="11" fill="#5E6F7D">技术对比/原理文</text>
+          <rect x="370" y="90" width="140" height="56" rx="4" fill="#F3E6D6" stroke="#C47B3A"/>
+          <text x="440" y="114" text-anchor="middle" font-size="12" fill="#0F1C2E">证明</text>
+          <text x="440" y="132" text-anchor="middle" font-size="11" fill="#5E6F7D">案例/政策/里程碑</text>
+          <rect x="540" y="90" width="190" height="56" rx="4" fill="#fff" stroke="#D5D0C6"/>
+          <text x="635" y="114" text-anchor="middle" font-size="12" fill="#0F1C2E">转化</text>
+          <text x="635" y="132" text-anchor="middle" font-size="11" fill="#5E6F7D">测算/白皮书/Contact</text>
+          <path d="M175 118 H195" stroke="#0E8F8A" stroke-width="1.5"/><path d="M190 112 L200 118 L190 124" fill="#0E8F8A"/>
+          <path d="M345 118 H365" stroke="#0E8F8A" stroke-width="1.5"/><path d="M360 112 L370 118 L360 124" fill="#0E8F8A"/>
+          <path d="M515 118 H535" stroke="#0E8F8A" stroke-width="1.5"/><path d="M530 112 L540 118 L530 124" fill="#0E8F8A"/>
+          <rect x="200" y="180" width="340" height="50" rx="3" fill="#EFEAE1" stroke="#D5D0C6"/>
+          <text x="370" y="210" text-anchor="middle" font-size="12" fill="#0F1C2E">交付与续约：Field Ops + 24/7 TCS + 数据回传 → 模型变强 → 更好卖</text>
+          <path d="M635 150 V165 H370 V175" stroke="#C47B3A" stroke-width="1.5" fill="none"/>
+          <path d="M364 170 L370 180 L376 170" fill="#C47B3A"/>
+        </svg>
+        <figcaption>图 3 · 官网负责前端闭环；售后与数据飞轮负责后端复利。两端都在公开材料里写清楚了。</figcaption>
+      </figure>
+    </section>
+
+    <!-- 09 -->
+    <section id="s09">
+      <div class="sec-head">
+        <div class="sec-num">09</div>
+        <div>
+          <h2>可直接用进 BP 的素材库</h2>
+          <p>按 BP 章节归位，避免临用时再翻官网。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>BP 章节</th><th>建议直接引用的官网素材</th></tr></thead>
+          <tbody>
+            <tr><td>市场问题</td><td>首页 Impact：2050 年 100 亿人；收获—零售损失 &gt;12.5 亿吨；果品对比文 FAO 13.2%/水果至 50%</td></tr>
+            <tr><td>技术壁垒</td><td>Technology 三支柱；Behind the Scenes；Hospital to Hatchery；Series B “&lt;1 秒且无人在环”原话</td></tr>
+            <tr><td>产品矩阵</td><td>Genus Focus / Scale / Echo；缺陷清单；Fast/Accessible/Simple</td></tr>
+            <tr><td>商业模式</td><td>Privacy 中“订阅+硬件+专业服务”；The Packer OpEx；Vencomatic €15M 融资安排</td></tr>
+            <tr><td>标杆客户</td><td>JimboFresh；Sirevåg；Hendrix 德国；Pluriton；Wimex；Ter Heerdt &amp; Verbeek</td></tr>
+            <tr><td>运营指标</td><td>&gt;2 亿枚扫描；11 场/6 国；3,200–3,275 蛋/h；孵化率 95.7%；US 西瓜 $70 万模型</td></tr>
+            <tr><td>政策红利</td><td>EU Livestock Strategy 2026 末终结雄雏扑杀；德国 D13 痛觉研究；Hatch Check</td></tr>
+            <tr><td>组织与交付</td><td>About 职能图；US 24/7 + PagerDuty；Careers 福利与 ESOP</td></tr>
+            <tr><td>融资与资本</td><td>2019–2025 里程碑；Series A/B 投资方与用途四条</td></tr>
+            <tr><td>公司治理</td><td>Legal Notice 主体/HRB/VAT；RDP 安全披露制度</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="s10">
+      <div class="sec-head">
+        <div class="sec-num">10</div>
+        <div>
+          <h2>未覆盖与口径说明</h2>
+          <p>诚实边界：哪些没读透，哪些数字口径不一致。</p>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <strong>未完全展开：</strong>
+        新闻室约 30% 更早/更细客户稿正文（列表已登记）；Ashby 具体在招 JD；
+        HubSpot 白皮书 PDF 本体；Google Drive 品牌包与新闻资产；站内视频内容；多语言 leaflet PDF 逐页。
+        <br/><br/>
+        <strong>口径提醒：</strong>
+        蛋扫描量 Series B 稿写 &gt;170M（2026-01），官网现写 &gt;200M——属随时间更新；
+        installations 官网/白皮书约 11 场 vs FreshPlaza 2025-10 称约 25 套 operational，可能含不同产品/统计范围；
+        US 西瓜节省为上界模型而非审计结果。BP 引用时请标注日期与来源。
+      </div>
+      <div class="callout">
+        <strong>全站检查结论：</strong>
+        官网检查完毕后可以确认：Orbem 的领先不是“某篇文章写得好”，而是
+        <strong>站点结构、产品叙事、政策内容、工程案例、转化资产、招聘与合规</strong>被编成同一套系统。
+        若要对标，BP 里除了技术路线，还应补一页“市场操作系统”——他们如何获客、如何建立信任、如何把监管变成订单。
+      </div>
+
+      <footer>
+        <h3 style="margin-top:8px">主要检查 URL</h3>
+        <ol>
+          <li><a href="https://www.orbem.ai/">https://www.orbem.ai/</a> 首页</li>
+          <li><a href="https://www.orbem.ai/technology">/technology</a> · <a href="https://www.orbem.ai/about">/about</a> · <a href="https://www.orbem.ai/careers">/careers</a> · <a href="https://www.orbem.ai/contact">/contact</a></li>
+          <li><a href="https://www.orbem.ai/poultry">/poultry</a> · <a href="https://www.orbem.ai/poultry-in-ovo-sexing">/poultry-in-ovo-sexing</a> · <a href="https://www.orbem.ai/poultry-fertilization-status-detection">/poultry-fertilization-status-detection</a></li>
+          <li><a href="https://www.orbem.ai/fruits">/fruits</a> · <a href="https://www.orbem.ai/nuts">/nuts</a> · <a href="https://www.orbem.ai/health">/health</a> · <a href="https://www.orbem.ai/future-solutions">/future-solutions</a></li>
+          <li><a href="https://www.orbem.ai/newsroom">/newsroom</a>（含 page=2..5）</li>
+          <li><a href="https://www.orbem.ai/us-watermelon-quality-control-genus-echo-business-case">US Watermelon Business Case</a> · <a href="https://www.orbem.ai/in-ovo-sexing-white-paper-genus-focus">White Paper</a></li>
+          <li><a href="https://www.orbem.ai/legal-notice">/legal-notice</a> · <a href="https://www.orbem.ai/privacy-policy">/privacy-policy</a> · <a href="https://www.orbem.ai/responsible-disclosure-policy">/responsible-disclosure-policy</a></li>
+          <li>关键正文：Series B · Capacity Burner · Why We Exist · Hendrix Case · US 7 Technologies · US Support · EU Livestock Strategy · Behind the Scenes · Hospital to Hatchery · JimboFresh · Sirevåg · Fruit QC Comparison</li>
+          <li>外部：The Packer · FreshPlaza · ValenciaFruits（官网转载入口）</li>
+        </ol>
+        <p style="margin-top:16px">配套阅读：《Orbem调研报告.html》（体系/技术/案例深拆） · 《Orbem体系拆解_商业BP补充.md》 · 本文件（全站检查台账）。</p>
+        <p>整理日期：2026-09-21 · 数据以公开网页文本为准。</p>
+      </footer>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  var progress=document.getElementById('progress');
+  var links=document.querySelectorAll('.side a, .nav a');
+  var sections=document.querySelectorAll('main section');
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    if(progress) progress.style.width=(max>0?(h.scrollTop/max)*100:0)+'%';
+    var current=null;
+    sections.forEach(function(sec){ if(sec.getBoundingClientRect().top<=100) current=sec.id; });
+    links.forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      if(current && href==='#'+current) a.classList.add('active');
+      else a.classList.remove('active');
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>

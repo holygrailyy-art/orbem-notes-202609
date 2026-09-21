@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbem 官网素材全量沉淀报告 · 原图 · 新闻 · 物料</title>
+<style>
+:root{
+  --ink:#0F1C2E;--paper:#F7F4EE;--paper2:#EFEAE1;--signal:#0E8F8A;
+  --signal-soft:#D7EFED;--amber:#C47B3A;--amber-soft:#F3E6D6;
+  --haze:#5E6F7D;--line:#D5D0C6;--white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.7}
+a{color:var(--signal)}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--signal);z-index:99}
+.top{position:sticky;top:0;z-index:90;background:rgba(247,244,238,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:Georgia,serif;font-size:14px}.brand span{color:var(--signal)}
+.nav{display:flex;flex-wrap:wrap;gap:2px 8px}
+.nav a{font-size:12px;color:var(--haze);text-decoration:none;padding:4px 6px;border-radius:4px}
+.nav a:hover,.nav a:focus-visible{color:var(--signal);background:var(--signal-soft);outline:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+.hero{margin:24px 0 36px;padding:40px 32px;color:#fff;background:linear-gradient(145deg,#0F1C2E,#163048);border-radius:4px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:240px;height:240px;border:1px solid rgba(14,143,138,.35);border-radius:50%}
+.eyebrow{font-family:Georgia,serif;font-size:12px;letter-spacing:.14em;color:var(--signal);margin:0 0 12px}
+.hero h1{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(26px,3.8vw,40px);line-height:1.25;margin:0 0 14px}
+.hero p{max-width:46em;color:rgba(255,255,255,.84);margin:0 0 20px}
+.meta{display:flex;flex-wrap:wrap;gap:16px 28px;border-top:1px solid rgba(255,255,255,.15);padding-top:16px}
+.meta strong{display:block;font-family:Georgia,serif;font-size:20px}
+.meta span{font-size:12px;color:rgba(255,255,255,.6)}
+section{margin:48px 0;scroll-margin-top:70px}
+.sec-h{display:grid;grid-template-columns:52px 1fr;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.sec-n{font-family:Georgia,serif;font-size:26px;color:var(--signal);line-height:1;padding-top:4px}
+.sec-h h2{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sec-h p{margin:0;color:var(--haze);font-size:13.5px}
+.lead{font-size:16px;color:#1C2F45;max-width:48em}
+.muted{color:var(--haze);font-size:13px}
+.callout{background:#fff;border-left:3px solid var(--signal);padding:14px 16px;margin:14px 0}
+.callout.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0 22px}
+.stat{background:#fff;border:1px solid var(--line);padding:12px}
+.stat .v{font-family:"SF Mono",Menlo,monospace;font-size:18px;display:block;margin-bottom:4px}
+.stat .l{font-size:12px;color:var(--haze)}
+h3{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:18px;margin:26px 0 10px}
+h4{font-family:Georgia,serif;font-weight:500;font-size:15px;margin:0 0 8px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.gallery.wide{grid-template-columns:repeat(2,1fr)}
+.gallery.tight{grid-template-columns:repeat(4,1fr)}
+.card{background:#fff;border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.card img,.card object{display:block;width:100%;height:180px;object-fit:cover;background:#e8e4dc}
+.card.fit img{height:auto;max-height:260px;object-fit:contain;background:#f3f0ea;padding:8px}
+.card .cap{padding:10px 12px;font-size:12.5px;line-height:1.45;border-top:1px solid var(--line)}
+.card .cap b{display:block;color:var(--ink);margin-bottom:2px;font-size:13px}
+.card .cap span{color:var(--haze)}
+.card.missing img{display:none}
+.card.missing .ph{height:180px;display:flex;align-items:center;justify-content:center;background:var(--paper2);color:var(--haze);font-size:12px;text-align:center;padding:12px;border-bottom:1px solid var(--line)}
+.objscan{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.objscan .card img{height:240px;object-fit:cover}
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border:1px solid var(--signal);color:var(--signal);margin-right:4px}
+.tag.amber{border-color:var(--amber);color:var(--amber)}
+.table-wrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:13px;min-width:640px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--ink);color:#fff;font-weight:500;font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+.quote{font-family:Georgia,"Songti SC",serif;border-left:2px solid var(--signal);padding:6px 0 6px 12px;margin:12px 0;color:#1C2F45}
+.quote cite{display:block;margin-top:6px;font-style:normal;font-size:12px;color:var(--haze)}
+.pill-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.pill{background:#fff;border:1px solid var(--line);padding:12px 14px;font-size:13px}
+.pill b{display:block;margin-bottom:4px}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--haze)}
+.disclaimer{background:var(--paper2);border:1px dashed var(--line);padding:12px 14px;margin:14px 0;font-size:13px;color:var(--haze)}
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .gallery,.gallery.tight,.objscan,.pill-list{grid-template-columns:1fr 1fr}
+  .nav{display:none}
+}
+@media(max-width:560px){
+  .gallery,.gallery.tight,.gallery.wide,.objscan,.pill-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Orbem Asset Archive <span>· 官网原图沉淀</span></div>
+    <nav class="nav">
+      <a href="#s01">总览</a>
+      <a href="#s02">视觉语言</a>
+      <a href="#s03">产品原图</a>
+      <a href="#s04">缺陷图库</a>
+      <a href="#s05">技术原理图</a>
+      <a href="#s06">新闻图档</a>
+      <a href="#s07">案例客户</a>
+      <a href="#s08">团队文化</a>
+      <a href="#s09">物料外链</a>
+      <a href="#s10">数字金句库</a>
+      <a href="#s11">BP用法</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Full Asset Sedimentation · orbem.ai · Local Archive</p>
+    <h1>Orbem 官网素材全量沉淀报告<br/>原图 · 新闻图档 · 物料与外链</h1>
+    <p>
+      这一版回答你的要求：不是再画示意图，而是把官网能抓到的<strong>真实图片、缺陷插画、产线照片、新闻配图、技术原理图</strong>
+      全部下载到本地 <span class="mono" style="color:#7EC8C3">assets/orbem/</span>，并在报告里<strong>直接展示</strong>。
+      同时把每一张图对应的内容价值、可引用场景沉淀下来。
+    </p>
+    <div class="meta">
+      <div><strong>125+</strong><span>本地原图（avif/svg）</span></div>
+      <div><strong>~10MB</strong><span>素材包体积</span></div>
+      <div><strong>11</strong><span>素材分库</span></div>
+      <div><strong>45+</strong><span>新闻条目已登记</span></div>
+      <div><strong>3</strong><span>可下载产品物料入口</span></div>
+    </div>
+  </div>
+
+  <!-- 01 -->
+  <section id="s01">
+    <div class="sec-h">
+      <div class="sec-n">01</div>
+      <div>
+        <h2>素材总览：官网真正留给外界的资产</h2>
+        <p>先把“他们有什么”说清楚，再逐库展示。</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="v">品牌视觉</span><span class="l">OBJECT→SCAN→DATA<br/>玻璃质感 3D 物体</span></div>
+      <div class="stat"><span class="v">缺陷图库</span><span class="l">西瓜/牛油果/芒果<br/>官方 SVG 插画</span></div>
+      <div class="stat"><span class="v">产线实景</span><span class="l">Genus Focus / Scale<br/>孵化场与包装线</span></div>
+      <div class="stat"><span class="v">技术图解</span><span class="l">穿透对比 / 3D重建<br/>速度-画质曲线</span></div>
+      <div class="stat"><span class="v">新闻图档</span><span class="l">融资/客户/政策<br/>案例封面图</span></div>
+    </div>
+    <div class="callout">
+      <strong>本地路径：</strong>
+      所有已下载素材位于
+      <span class="mono">assets/orbem/{home,tech,fruits,poultry,about,news,cases,misc}/</span>。
+      报告内图片均为相对路径引用；AVIF 由现代浏览器（Chrome/Safari/Edge）原生支持。
+    </div>
+    <div class="disclaimer">
+      <strong>下载说明：</strong>
+      Webflow CDN 对部分资源（个别头像、奖项 logo、部分 solution 图）返回 403，无法完整落地；
+      这些在报告中以文字占位卡标注。核心产品图、缺陷 SVG、产线照片、新闻封面、技术原理图均已成功下载。
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section id="s02">
+    <div class="sec-h">
+      <div class="sec-n">02</div>
+      <div>
+        <h2>品牌视觉语言：OBJECT → SCAN → DATA</h2>
+        <p>全站复用的三层隐喻——这是他们最值得抄的“品牌语法”。</p>
+      </div>
+    </div>
+    <p class="lead">
+      首页、Poultry、Fruits、Nuts 都用同一套结构：真实物体 → 玻璃化扫描体 → 数据态。
+      这不是装饰，而是把“非破坏内部洞察”翻译成可重复的视觉记忆。
+    </p>
+    <div class="objscan">
+      <div class="card">
+        <img src="assets/orbem/home/avocado-object.avif" alt="Orbem 首页牛油果实物 OBJECT" />
+        <div class="cap"><b>OBJECT · 牛油果实物</b><span>assets/orbem/home/avocado-object.avif · 首页 Hero 第一层</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/home/avocado-scan.avif" alt="Orbem 牛油果玻璃扫描体 SCAN" />
+        <div class="cap"><b>SCAN · 玻璃扫描体</b><span>assets/orbem/home/avocado-scan.avif · 可见内部结构的半透明表达</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/home/avocado-data.avif" alt="Orbem 牛油果数据态 DATA" />
+        <div class="cap"><b>DATA · 数据态</b><span>assets/orbem/home/avocado-data.avif · 像素/体素化，对应 AI 输入</span></div>
+      </div>
+    </div>
+    <div class="gallery tight">
+      <div class="card">
+        <img src="assets/orbem/poultry/egg-photo.avif" alt="鸡蛋实物" />
+        <div class="cap"><b>家禽 · 蛋实物</b><span>poultry/egg-photo.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/egg-bump.avif" alt="鸡蛋玻璃扫描" />
+        <div class="cap"><b>家禽 · 蛋 SCAN</b><span>poultry/egg-bump.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/egg-data.avif" alt="鸡蛋数据态" />
+        <div class="cap"><b>家禽 · 蛋 DATA</b><span>poultry/egg-data.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/misc/walnut-photo.avif" alt="核桃实物" />
+        <div class="cap"><b>坚果 · 核桃</b><span>misc/walnut-photo.avif</span></div>
+      </div>
+    </div>
+    <div class="gallery tight">
+      <div class="card">
+        <img src="assets/orbem/fruits/mango-photo.avif" alt="芒果实物" />
+        <div class="cap"><b>水果 · 芒果 OBJECT</b><span>fruits/mango-photo.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/mango-bump.avif" alt="芒果扫描 bump" />
+        <div class="cap"><b>水果 · 芒果 SCAN</b><span>fruits/mango-bump.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/mango-nobump.avif" alt="芒果数据" />
+        <div class="cap"><b>水果 · 芒果 DATA</b><span>fruits/mango-nobump.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/misc/nav-fruits.avif" alt="导航水果图" onerror="this.parentElement.classList.add('missing')" />
+        <div class="cap"><b>导航缩略图</b><span>misc/nav-*.avif（部分 CDN 损坏/403）</span></div>
+      </div>
+    </div>
+    <div class="callout warn">
+      <strong>BP 可用结论：</strong>
+      Orbem 把产品认知压缩成三帧图。我们的 BP/官网也应有等价语法（物体→成像→决策），否则再多文字也难形成记忆点。
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="s03">
+    <div class="sec-h">
+      <div class="sec-n">03</div>
+      <div>
+        <h2>产品与产线原图库</h2>
+        <p>实验室、设备、装机现场——工业可信度主要靠这些图建立。</p>
+      </div>
+    </div>
+
+    <h3>3.1 技术与实验室</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/tech/mri-machine.avif" alt="Orbem MRI 设备" />
+        <div class="cap"><b>工业 MRI 设备实景</b><span>tech/mri-machine.avif · Technology 页 · 来自医院级技术的工业化形态</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/tech/lab-fruit-scans.avif" alt="实验室水果扫描" />
+        <div class="cap"><b>科学家查看水果扫描</b><span>tech/lab-fruit-scans.avif · 表明果品研发已在实验室跑通</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/tech/brain-fruit-screens.avif" alt="屏幕上的扫描图像" />
+        <div class="cap"><b>屏幕上的内部影像</b><span>tech/brain-fruit-screens.avif · “看见内部”的直接证据图</span></div>
+      </div>
+    </div>
+
+    <h3>3.2 家禽产线（Genus Focus / Scale）</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/poultry/egg-conveyor.avif" alt="鸡蛋传送带被扫描" />
+        <div class="cap"><b>传送线上的蛋</b><span>poultry/egg-conveyor.avif · 首页/Scale 页复用 · 产线连续作业</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/genus-focus-vencomatic.avif" alt="Genus Focus 设备" />
+        <div class="cap"><b>Genus Focus × Vencomatic</b><span>poultry/genus-focus-vencomatic.avif · 联合交付硬件形态</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/pick-place.avif" alt="机械手取放" />
+        <div class="cap"><b>Pick-and-place 机械手</b><span>poultry/pick-place.avif · 工业化自动化关键一环</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/video-trolley.avif" alt="推车进入设备" />
+        <div class="cap"><b>Trolley-to-trolley 流程</b><span>poultry/video-trolley.avif · 视频截帧 · 仅 1 名操作员</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/hatchery-worker.avif" alt="孵化场工人监控产线" />
+        <div class="cap"><b>孵化场现场监控</b><span>poultry/hatchery-worker.avif · 客户侧使用场景</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/poultry/chicks-crates.avif" alt="雏鸡筐" />
+        <div class="cap"><b>雏鸡筐 · 伦理叙事锚点</b><span>poultry/chicks-crates.avif · 对应“终结雄雏扑杀”议题</span></div>
+      </div>
+    </div>
+    <div class="gallery tight">
+      <div class="card fit">
+        <img src="assets/orbem/poultry/step1.svg" alt="流程步骤1" />
+        <div class="cap"><b>Step · 上料推车</b><span>poultry/step1.svg</span></div>
+      </div>
+      <div class="card fit">
+        <img src="assets/orbem/poultry/step4.svg" alt="流程步骤扫描" />
+        <div class="cap"><b>Step · MRI 扫描</b><span>poultry/step4.svg</span></div>
+      </div>
+      <div class="card fit">
+        <img src="assets/orbem/poultry/step5.svg" alt="流程步骤分拣" />
+        <div class="cap"><b>Step · 分拣出料</b><span>poultry/step5.svg</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/egg-chain.avif" alt="蛋链示意" />
+        <div class="cap"><b>蛋链（Egg Chain）</b><span>news/egg-chain.avif · 工业化博客关键示意</span></div>
+      </div>
+    </div>
+
+    <h3>3.3 果品装机与实验室</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/fruits/jimbofresh-install.avif" alt="JimboFresh 装机" />
+        <div class="cap"><b>JimboFresh 商业装机</b><span>fruits/jimbofresh-install.avif · 全球首个鲜果 AI-MRI 部署</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/melon-scan-photo.avif" alt="西瓜扫描照片" />
+        <div class="cap"><b>西瓜内部扫描实景</b><span>fruits/melon-scan-photo.avif · US 商业测算页配图</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/lab-watermelon-mri.avif" alt="实验室西瓜与MRI" />
+        <div class="cap"><b>科学家与西瓜/MRI</b><span>fruits/lab-watermelon-mri.avif · 果品研发可信度图</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/lab-mango-science.avif" alt="实验室芒果" />
+        <div class="cap"><b>实验室芒果样品</b><span>fruits/lab-mango-science.avif · 品类扩展信号</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/fruits/genus-focus-detail.avif" alt="Genus 设备细节" />
+        <div class="cap"><b>设备细节特写</b><span>fruits/genus-focus-detail.avif · 工业设计质感</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/misc/lab-cashew.avif" alt="腰果实验室" />
+        <div class="cap"><b>坚果实验室（腰果）</b><span>misc/lab-cashew.avif · Nuts 场景研发图</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s04">
+    <div class="sec-h">
+      <div class="sec-n">04</div>
+      <div>
+        <h2>官方缺陷图库（可直接进 BP）</h2>
+        <p>Genus Echo 页面公开的 SVG 缺陷插画——比文字表格强得多。</p>
+      </div>
+    </div>
+    <p class="lead">
+      这些图是 Orbem 用来教育市场的“缺陷词典”。下面全部为官网原 SVG，已下载到本地。
+    </p>
+
+    <h3>4.1 西瓜 Watermelon</h3>
+    <div class="gallery tight">
+      <div class="card fit"><img src="assets/orbem/fruits/wm-normal.svg" alt="西瓜正常态" /><div class="cap"><b>Normal State</b><span>正常果肉结构</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/wm-hidden.svg" alt="西瓜隐性撞击" /><div class="cap"><b>Hidden Impacts</b><span>隐性撞击伤 · 外观无痕内部受损</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/wm-maturation.svg" alt="西瓜过熟" /><div class="cap"><b>Overmaturation</b><span>过熟 · 传统抽检难稳定识别</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/wm-hollow.svg" alt="西瓜空心病" /><div class="cap"><b>Hollow Heart</b><span>空心病 · 零售索赔高发缺陷</span></div></div>
+    </div>
+
+    <h3>4.2 牛油果 Avocado</h3>
+    <div class="gallery tight">
+      <div class="card fit"><img src="assets/orbem/fruits/av-normal.svg" alt="牛油果正常" /><div class="cap"><b>Normal State</b><span>正常</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/av-browning.svg" alt="内部褐变" /><div class="cap"><b>Internal Browning</b><span>内部褐变</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/av-vascular.svg" alt="维管束褐变" /><div class="cap"><b>Vascular Browning</b><span>维管束褐变</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/av-rot.svg" alt="腐烂" /><div class="cap"><b>Rot</b><span>内部腐烂</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/av-cooling.svg" alt="冷害" /><div class="cap"><b>Cooling Damage</b><span>冷害 / chilling injury</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/av-germ.svg" alt="早萌" /><div class="cap"><b>Early Germination</b><span>早萌</span></div></div>
+    </div>
+    <div class="callout">
+      缺少一张 <span class="mono">Bruising and Mechanical Damage</span>：官网 CDN 对该 SVG 返回 403，文字上仍应写入 BP 缺陷清单。
+    </div>
+
+    <h3>4.3 芒果 Mango</h3>
+    <div class="gallery tight">
+      <div class="card fit"><img src="assets/orbem/fruits/mg-normal.svg" alt="芒果正常" /><div class="cap"><b>Normal State</b><span>正常</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/mg-browning.svg" alt="芒果内部褐变" /><div class="cap"><b>Internal Browning</b><span>内部褐变</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/mg-jelly.svg" alt="jelly seed" /><div class="cap"><b>Jelly Seed</b><span>果肉果冻化</span></div></div>
+      <div class="card fit"><img src="assets/orbem/fruits/mg-softnose.svg" alt="soft nose" /><div class="cap"><b>Soft Nose</b><span>软鼻</span></div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>果种</th><th>官网公开缺陷</th><th>商业含义</th><th>本地文件</th></tr></thead>
+        <tbody>
+          <tr><td>西瓜</td><td>隐性撞击、过熟、空心病</td><td>零售商索赔、整批退货的高发源</td><td class="mono">fruits/wm-*.svg</td></tr>
+          <tr><td>牛油果</td><td>内部/维管束褐变、碰压、腐烂、冷害、早萌、未熟</td><td>切开抽检损耗高；货架期信任差</td><td class="mono">fruits/av-*.svg</td></tr>
+          <tr><td>芒果</td><td>内部褐变、jelly seed、soft nose</td><td>高价值鲜果，内部缺陷难目视</td><td class="mono">fruits/mg-*.svg</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="s05">
+    <div class="sec-h">
+      <div class="sec-n">05</div>
+      <div>
+        <h2>技术原理与竞品对比原图</h2>
+        <p>他们教育市场用的官方图解，全部落地。</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/tech-penetration.avif" alt="穿透深度对比图" />
+        <div class="cap"><b>穿透深度对比图（核心）</b><span>news/tech-penetration.avif · 可见光/NIR/HSI/微波/THz/MRI · 建议直接放 BP 竞争页</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/tech-absorbance.avif" alt="吸收与频率" />
+        <div class="cap"><b>Absorbance vs Frequency</b><span>news/tech-absorbance.avif · 为什么不同波段看到的东西不同</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/tech-hsi.avif" alt="高光谱成像示意" />
+        <div class="cap"><b>HSI 高光谱示意</b><span>news/tech-hsi.avif · 多波段光谱指纹</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/mri-principle.avif" alt="MRI原理对比" />
+        <div class="cap"><b>组织对比度原理</b><span>news/mri-principle.avif · 蛋清/蛋黄/胚胎等结构可分辨</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/3d-recon.avif" alt="3D重建示意" />
+        <div class="cap"><b>3D 切片重建示意</b><span>news/3d-recon.avif · 连续切片 → 体数据</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/speed-quality.avif" alt="速度与质量权衡" />
+        <div class="cap"><b>速度 vs 画质权衡</b><span>news/speed-quality.avif · Orbem 用 AI 打破该权衡的关键叙事图</span></div>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/egg-chain.avif" alt="蛋链" />
+        <div class="cap"><b>Egg Chain 结构</b><span>news/egg-chain.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/egg-chain-signal.avif" alt="蛋链信号握手" />
+        <div class="cap"><b>扫描器-产线信号握手</b><span>news/egg-chain-signal.avif · 工业自动化的软件层证据</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/sorting.avif" alt="分拣示意" />
+        <div class="cap"><b>精度分拣示意</b><span>news/sorting.avif · 雄/雌/未受精三类输出</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s06">
+    <div class="sec-h">
+      <div class="sec-n">06</div>
+      <div>
+        <h2>新闻室图档：每一条高价值新闻对应的原图</h2>
+        <p>把“新闻列表”变成可浏览的视觉档案库。</p>
+      </div>
+    </div>
+
+    <h3>6.1 融资与公司里程碑</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/series-b.avif" alt="Series B" />
+        <div class="cap"><b>Series B €55.5M · 2026-01-20</b><span>Innovation Industries 领投；已盈利；扩美国+果蔬+健康</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/series-a.avif" alt="Series A" />
+        <div class="cap"><b>Series A €30M · 2023-10-11</b><span>AI-powered imaging for everything and everyone</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/founders.avif" alt="创始团队" />
+        <div class="cap"><b>创始团队 · Why We Exist</b><span>Pedro（MRI加速）/ Maria（胚胎学）/ Miguel（成像AI）· TUM</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/impact-100m.avif" alt="1亿枚里程碑" />
+        <div class="cap"><b>1 亿枚蛋扫描里程碑 · 2025-05</b><span>Genus Focus 商业运营两年成绩</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/infographic-eggs.avif" alt="1亿枚信息图" />
+        <div class="cap"><b>Impact Infographic</b><span>news/infographic-eggs.avif · 可直接用于影响力叙事页</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/bavarian-award.avif" alt="巴伐利亚创新奖" />
+        <div class="cap"><b>Bavarian Innovation Award</b><span>2024 巴伐利亚创新奖相关报道配图</span></div>
+      </div>
+    </div>
+
+    <h3>6.2 果品与市场扩张</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/jimbofresh-pr.avif" alt="JimboFresh新闻" />
+        <div class="cap"><b>JimboFresh 首装 · 2026-05-12</b><span>Jimbee 品牌 &gt;38,000 吨西瓜 · 2026 产季启用 Genus Echo</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/valencia-interview.avif" alt="ValenciaFruits访谈" />
+        <div class="cap"><b>ValenciaFruits CEO 访谈</b><span>2026-06-12 · 客户侧选择理由</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/thepacker.avif" alt="The Packer报道" />
+        <div class="cap"><b>The Packer · 2027 美国路线</b><span>2026-07-01 · OpEx 按磅扫描 · 2027 初部署</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/fruit-qc-compare.avif" alt="果品技术对比文" />
+        <div class="cap"><b>果品质控技术对比文</b><span>2026-02-16 · NIR/HSI/MWS/THz/MRI · 赛道定义文</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/avocado-freshplaza.avif" alt="牛油果访谈" />
+        <div class="cap"><b>FreshPlaza 牛油果访谈</b><span>2025-10-31 · Johann Steinert · 吞吐/冷启动/定价模式</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/cases/us-melon-title.avif" alt="US西瓜测算" />
+        <div class="cap"><b>US 西瓜商业测算页头图</b><span>cases/us-melon-title.avif · 3.5%→1% 拒收率模型</span></div>
+      </div>
+    </div>
+
+    <h3>6.3 家禽客户与政策</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/sirevag.avif" alt="Sirevåg案例" />
+        <div class="cap"><b>Sirevåg Rugeri · 挪威</b><span>2026-04-28 · 200万母雏/年 · 雄雏率0.5% · €4M投入</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/norway-sirevag.avif" alt="挪威装机" />
+        <div class="cap"><b>Genus Focus 进入挪威</b><span>2024-07-04 · 早期新闻封面</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/hendrix.avif" alt="Hendrix案例" />
+        <div class="cap"><b>Hendrix Genetics 德国改造</b><span>2025-09-23 · 3200蛋/h/模块 · 孵化率95.7%</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/hendrix-launch.avif" alt="Hendrix发布" />
+        <div class="cap"><b>Hendrix × Orbem MRI 发布</b><span>2022-03-24 · 早期商业里程碑</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/genus-focus-hendrix.avif" alt="德国孵化场装机" />
+        <div class="cap"><b>德国商业孵化场装机</b><span>2024-05-10 · 服务德/荷市场</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/pluriton.avif" alt="Pluriton" />
+        <div class="cap"><b>Pluriton 荷兰/比利时</b><span>2023-11-20 · 与 Vencomatic 协同</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/lohmann.avif" alt="LOHMANN" />
+        <div class="cap"><b>LOHMANN Deutschland</b><span>2023-11-01 · 德国首套 Genus Focus · Dorum</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/ter-heerdt.avif" alt="Ter Heerdt" />
+        <div class="cap"><b>Ter Heerdt &amp; Verbeek</b><span>2024-05-02 · 1200万雏/年 · KAT 认证母鸡</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/swiss.avif" alt="瑞士行业倡议" />
+        <div class="cap"><b>瑞士行业级引入</b><span>2024-10-30 · 结束雄雏扑杀的全行业动作</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/dutch-ban.avif" alt="荷兰禁令" />
+        <div class="cap"><b>荷兰终结扑杀进程</b><span>2025-03-21 · 政策驱动装机</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/eu-livestock.avif" alt="欧盟畜牧策略" />
+        <div class="cap"><b>EU Livestock Strategy</b><span>2026-07-17 · 2026末前修订福利规则、终结系统性扑杀</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/hatchcheck.avif" alt="Hatch Check" />
+        <div class="cap"><b>US Hatch Check</b><span>2025-08-26 · 美国蛋业政策/认证动向</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/vencomatic.avif" alt="Vencomatic合作" />
+        <div class="cap"><b>Vencomatic 战略合作</b><span>2022-05-31 · 最高€15M设备金融 · 联合交付</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/animal-welfare.avif" alt="动物福利合规" />
+        <div class="cap"><b>动物福利合规证据</b><span>2023-05-24 · D13 前无痛觉的德国研究</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/bird-flu.avif" alt="禽流感议题" />
+        <div class="cap"><b>美国禽流感行业倡议</b><span>2025-04-02 · 疫苗/监测/数据可见性</span></div>
+      </div>
+    </div>
+
+    <h3>6.4 技术教育与思想领导</h3>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/news/behind-scenes.avif" alt="AI MRI幕后" />
+        <div class="cap"><b>Behind the Scenes of AI-MRI</b><span>2025-12-22 · MRI+AI 双角色深拆</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/automation-blog.avif" alt="自动化博客" />
+        <div class="cap"><b>Hospital to Hatchery</b><span>2025-07-22 · 蛋链/非金属/速度-画质</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/capacity-burner.avif" alt="Capacity Burner" />
+        <div class="cap"><b>The Capacity Burner</b><span>2026-02-24 · 未受精蛋经济学 · Genus Scale 论证文</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/intelligent-egg.avif" alt="Intelligent Egg" />
+        <div class="cap"><b>The Intelligent Egg</b><span>2025-11-26 · 蛋分析的长期运营/遗传价值</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/fert-story.avif" alt="受精检测产品故事" />
+        <div class="cap"><b>Fertilization Detector 产品故事</b><span>2025-05-26 · 每年约100亿枚蛋的叙事</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/7tech.avif" alt="美国孵化场7大技术" />
+        <div class="cap"><b>7 Technologies · US Hatchery 2026</b><span>2026-03-24 · 把自己写进采购清单的思想领导文</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/us-support.avif" alt="美国24/7支持" />
+        <div class="cap"><b>US 24/7 Support</b><span>2026-08-25 · 休斯顿TCS · PagerDuty · 信任交付</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/deep-tech.avif" alt="Deep Tech" />
+        <div class="cap"><b>Deep Tech — Next Frontier</b><span>2022-03-23 · 公司叙事层</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/new-frontiers.avif" alt="Imagine New Frontiers" />
+        <div class="cap"><b>Let’s Imagine New Frontiers</b><span>2021-12-20 · 愿景文</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/egg-glass.avif" alt="玻璃蛋" />
+        <div class="cap"><b>We Revolutionize Poultry</b><span>2023-10-20 · 品牌叙事封面</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/omelette.avif" alt="Omelette项目" />
+        <div class="cap"><b>Omelette Project</b><span>2024-06-11 · 蛋鸡长寿 · Interreg NWE 研发生态</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/home/genus-scale-line.avif" alt="Genus Scale产线" />
+        <div class="cap"><b>Genus Scale 产线实景</b><span>home/genus-scale-line.avif · 多页复用的核心产品图</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section id="s07">
+    <div class="sec-h">
+      <div class="sec-n">07</div>
+      <div>
+        <h2>案例与客户证言沉淀</h2>
+        <p>图 + 原话 + 数字，按客户打包，BP 可直接引用。</p>
+      </div>
+    </div>
+
+    <div class="gallery wide">
+      <div class="card">
+        <img src="assets/orbem/news/jimbofresh-pr.avif" alt="JimboFresh" style="height:240px" />
+        <div class="cap">
+          <b><span class="tag">果品首发</span> JimboFresh（西班牙）</b>
+          <span>
+            产品：Genus Echo 西瓜 · 2026 产季 · 年营销 &gt;38,000 吨<br/>
+            意义：全球首个鲜果 AI-MRI 商业装机<br/>
+            CEO：“We move from skilled guesswork to near-perfect precision.”
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/sirevag.avif" alt="Sirevåg" style="height:240px" />
+        <div class="cap">
+          <b><span class="tag amber">家禽闭环</span> Sirevåg Rugeri（挪威）</b>
+          <span>
+            产品：Genus Focus · 新建孵化场约 €4M · 200万母雏/年<br/>
+            结果：1 FTE 运营；雄雏率均值 0.5% / 最新 0.25%<br/>
+            背景：Nortura 对 in-ovo 蛋约 +10% 溢价
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery wide">
+      <div class="card">
+        <img src="assets/orbem/news/hendrix.avif" alt="Hendrix" style="height:220px" />
+        <div class="cap">
+          <b><span class="tag">工程交付</span> Hendrix Genetics 德国</b>
+          <span>
+            老厂房改造（地板/冷却/IT）+ 市政水备份冷却<br/>
+            吞吐：3,200 蛋/h/模块（3 模块 9,600/h）<br/>
+            精度：&lt;1% males-in-hatch；孵化率 91.8%→95.7%（最高批次 98.4%）
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/news/pluriton.avif" alt="Pluriton" style="height:220px" />
+        <div class="cap">
+          <b><span class="tag">自动化价值</span> Pluriton（荷/比）</b>
+          <span>
+            与 Vencomatic 协同推进 in-ovo sexing<br/>
+            客户证言：更可预测的母蛋产出；全自动带来效率提升
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <h3>客户/伙伴清单（官网新闻室出现的装机与合作）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>客户/伙伴</th><th>国家</th><th>产品/动作</th><th>时间</th></tr></thead>
+        <tbody>
+          <tr><td>Hendrix Genetics</td><td>法/德</td><td>Genus Focus 商业部署与德国孵化场改造</td><td>2022–2025</td></tr>
+          <tr><td>Vencomatic Group / Prinzen</td><td>荷兰</td><td>战略伙伴 + 自动化 + 设备金融</td><td>2022–</td></tr>
+          <tr><td>LOHMANN Deutschland（Dorum）</td><td>德国</td><td>德国首套 Genus Focus</td><td>2023-11</td></tr>
+          <tr><td>Pluriton</td><td>荷/比</td><td>Genus Focus 扩展</td><td>2023-11 / 2024-09</td></tr>
+          <tr><td>Ter Heerdt &amp; Verbeek</td><td>荷兰</td><td>1200万雏/年孵化场</td><td>2024-05</td></tr>
+          <tr><td>Sirevåg Rugeri / Salte</td><td>挪威</td><td>新建孵化场 + Genus Focus</td><td>2024–2026</td></tr>
+          <tr><td>瑞士行业倡议</td><td>瑞士</td><td>行业级引入 Genus Focus</td><td>2024-10</td></tr>
+          <tr><td>Wimex Group</td><td>—</td><td>Genus Scale 受精检测首装方向</td><td>2025-01</td></tr>
+          <tr><td>JimboFresh / Jimbee</td><td>西班牙</td><td>Genus Echo 西瓜首个商业装机</td><td>2026-05</td></tr>
+          <tr><td>美国孵化场</td><td>美国</td><td>Genus Focus 美国安装（Support 文披露 2 套）</td><td>2025–2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section id="s08">
+    <div class="sec-h">
+      <div class="sec-n">08</div>
+      <div>
+        <h2>团队、文化与组织图</h2>
+        <p>官网团队场景照已落地；个人头像多数被 CDN 403。</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="card">
+        <img src="assets/orbem/about/team-group.avif" alt="团队合影" />
+        <div class="cap"><b>Careers 页团队合影</b><span>about/team-group.avif · &gt;200人 · &gt;40国籍 · 41%女性</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/team-pineapple-meeting.avif" alt="菠萝会议" />
+        <div class="cap"><b>“菠萝会议”场景</b><span>about/team-pineapple-meeting.avif · 全站反复出现的文化符号</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/team-presentation.avif" alt="内部分享" />
+        <div class="cap"><b>内部技术分享</b><span>about/team-presentation.avif · 屏幕可见果品扫描</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/team-meeting.avif" alt="团队讨论" />
+        <div class="cap"><b>跨职能讨论</b><span>about/team-meeting.avif</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/brand-film-still.avif" alt="品牌片" />
+        <div class="cap"><b>Brand Film 静帧</b><span>about/brand-film-still.avif · 医学影像语境</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/home/mission-scan.avif" alt="使命扫描" />
+        <div class="cap"><b>Mission 配图</b><span>home/mission-scan.avif · “everything and everyone”</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/jade.avif" alt="Jade Moreau" />
+        <div class="cap"><b>Jade Moreau</b><span>MRI Application Specialist · 客户侧实习生转正叙事</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/andrew.avif" alt="Andrew Shin" />
+        <div class="cap"><b>Andrew Shin</b><span>Mechatronics Integration Engineer</span></div>
+      </div>
+      <div class="card">
+        <img src="assets/orbem/about/karla.avif" alt="Karla Mieses" />
+        <div class="cap"><b>Karla Mieses</b><span>Head of Quality Engineering</span></div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>头像/奖项图：</strong>
+      Pedro Gómez、Maria Laparidou、Miguel Molina、Benjamin Rauser、Ksenia Yashina 等个人肖像，
+      以及 EIC / Sifted / TUM / XPRIZE 等奖项图，CDN 对直接下载返回 403，本地未保存。
+      文字层面已在《全站检查报告》中完整记录姓名与奖项。
+    </div>
+
+    <div class="pill-list">
+      <div class="pill"><b>组织价值观</b>We own every challenge · We strive for better · We imagine new frontiers</div>
+      <div class="pill"><b>人才信号</b>ESOP 全员持股 · 德国 L&amp;D €1750 · 美国 401k match 5% · Work from Anywhere 60天</div>
+      <div class="pill"><b>交付组织</b>Hardware / Imaging / AI / Applications / Field Ops / TCS / Procurement / OpsEx</div>
+      <div class="pill"><b>安全制度</b>Responsible Disclosure · security@orbem.ai · 72h 确认 · 德国法管辖</div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section id="s09">
+    <div class="sec-h">
+      <div class="sec-n">09</div>
+      <div>
+        <h2>可下载物料与官方外链库</h2>
+        <p>官网明确提供的下载入口与延伸阅读，全部登记。</p>
+      </div>
+    </div>
+
+    <h3>9.1 官网自有下载 / 转化资产</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>资产</th><th>类型</th><th>链接</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Fruit Leaflet（5 语言）</td>
+            <td>PDF 产品单页</td>
+            <td class="mono">orbem.ai/fruits → Resource Hub</td>
+            <td>英/德/西/意/希 · Genus Echo 对外材料</td>
+          </tr>
+          <tr>
+            <td>Genus Focus White Paper</td>
+            <td>白皮书（HubSpot 门控）</td>
+            <td class="mono"><a href="https://www.orbem.ai/in-ovo-sexing-white-paper-genus-focus">/in-ovo-sexing-white-paper-genus-focus</a></td>
+            <td>工业运行基准与 live production 结果</td>
+          </tr>
+          <tr>
+            <td>US Watermelon Business Case</td>
+            <td>经济模型页</td>
+            <td class="mono"><a href="https://www.orbem.ai/us-watermelon-quality-control-genus-echo-business-case">/us-watermelon-quality-control-genus-echo-business-case</a></td>
+            <td>3.5%→1% 拒收率 · ≈$70万/季模型</td>
+          </tr>
+          <tr>
+            <td>Brand assets</td>
+            <td>Logo/色板/字体（Google Drive）</td>
+            <td class="mono">Newsroom Resource Center</td>
+            <td>品牌规范</td>
+          </tr>
+          <tr>
+            <td>Press assets</td>
+            <td>新闻资产包（Google Drive）</td>
+            <td class="mono">Newsroom Resource Center</td>
+            <td>媒体图与公告</td>
+          </tr>
+          <tr>
+            <td>Hendrix Case Study</td>
+            <td>案例 PDF（HubSpot）</td>
+            <td class="mono">Hendrix 文内 “Download Case Study”</td>
+            <td>德国孵化场改造细节</td>
+          </tr>
+          <tr>
+            <td>Ashby 招聘</td>
+            <td>职位与 Talent Pool</td>
+            <td class="mono"><a href="https://jobs.ashbyhq.com/orbem/form/orbem-talent-pool">jobs.ashbyhq.com/orbem</a></td>
+            <td>组织扩张信号</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>9.2 官网挂载的行业/媒体外链（内容入口）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>外链</th><th>主题</th><th>价值</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://www.thepacker.com/news/industry/industrial-mri-technology-plans-eliminate-produce-guesswork-future-fruit-grading-20">The Packer</a></td><td>工业 MRI 2027 果品分级</td><td>美国市场时间表与 OpEx 模式</td></tr>
+          <tr><td><a href="https://www.freshplaza.com/north-america/article/9780324/mri-technology-for-further-reducing-waste-and-improving-efficiency-in-avocado/">FreshPlaza</a></td><td>牛油果 MRI 减损</td><td>吞吐、冷启动样本、定价访谈</td></tr>
+          <tr><td><a href="https://valenciafruits.com/miguel-angel-jimenez-jimbofresh-tenemos-nuestro-adn-objetivo-consumidor-siempre-acierte-eleccion/">ValenciaFruits</a></td><td>JimboFresh CEO</td><td>客户选择逻辑</td></tr>
+          <tr><td><a href="https://agriculture.ec.europa.eu/overview-vision-agriculture-food/eu-livestock-strategy_en">EU Livestock Strategy</a></td><td>欧盟畜牧策略原文</td><td>2026 末前终结雄雏扑杀</td></tr>
+          <tr><td><a href="https://sifted.eu/intelligence/reports/sifted-ai-100-2025">Sifted AI 100 2025</a></td><td>欧洲 AI 新锐榜</td><td>第三方背书</td></tr>
+          <tr><td><a href="https://www.linkedin.com/company/orbem-ai/">LinkedIn</a> / <a href="https://www.instagram.com/orbem.ai">Instagram</a> / Glassdoor / Kununu</a></td><td>社交与雇主品牌</td><td>持续内容与口碑</td></tr>
+          <tr><td>hello@orbem.ai · privacy@orbem.ai · security@orbem.ai</td><td>联系邮箱</td><td>商务/隐私/安全披露</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>9.3 Impact 配图（首页叙事）</h3>
+    <div class="gallery tight">
+      <div class="card"><img src="assets/orbem/home/impact-earth.avif" alt="地球" /><div class="cap"><b>For People / Planet</b><span>2050 年 100 亿人口 · 粮食与健康</span></div></div>
+      <div class="card"><img src="assets/orbem/home/impact-wheat.avif" alt="麦田" /><div class="cap"><b>For the Planet</b><span>收获—零售损失 &gt;12.5 亿吨</span></div></div>
+      <div class="card"><img src="assets/orbem/home/mission-scan.avif" alt="使命" /><div class="cap"><b>For Progress</b><span>彻底透明重塑信息获取标准</span></div></div>
+      <div class="card"><img src="assets/orbem/home/sol-nuts.avif" alt="坚果入口" /><div class="cap"><b>Solutions · Nuts</b><span>变形/变色/脱水检测入口图</span></div></div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <div class="sec-h">
+      <div class="sec-n">10</div>
+      <div>
+        <h2>数字 · 金句 · 可引用库</h2>
+        <p>从全站正文中筛出可直接写入 BP 的硬数字与原话。</p>
+      </div>
+    </div>
+
+    <h3>10.1 硬数字速查</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>指标</th><th>数值</th><th>来源</th></tr></thead>
+        <tbody>
+          <tr><td>公司成立 / 团队</td><td class="mono">2019 / &gt;200人 / &gt;40国籍 / 41%女性</td><td>About / Careers</td></tr>
+          <tr><td>Series B</td><td class="mono">€55.5M · 2026-01-20 · 已盈利</td><td>Series B PR</td></tr>
+          <tr><td>Series A</td><td class="mono">€30M · 2023-10</td><td>Newsroom</td></tr>
+          <tr><td>蛋扫描量</td><td class="mono">&gt;2亿枚（B轮稿曾写 &gt;1.7亿）</td><td>官网 / Series B</td></tr>
+          <tr><td>Genus Focus 性能</td><td class="mono">&lt;1s · 0.8s/枚 · 3,100–3,275 蛋/h/模块</td><td>产品页 / 白皮书 / 合作稿</td></tr>
+          <tr><td>精度</td><td class="mono">雄雏 &lt;1% MinH · 案例均值 0.5% · 最新 0.25%</td><td>产品页 / Sirevåg</td></tr>
+          <tr><td>Hendrix 吞吐/孵化率</td><td class="mono">3,200 蛋/h/模块 · 孵化率 95.7%</td><td>Hendrix Case</td></tr>
+          <tr><td>受精检测产能释放</td><td class="mono">最高 20% · 未受精比例 8–20%</td><td>Fertilization 页 / Capacity Burner</td></tr>
+          <tr><td>果品吞吐</td><td class="mono">西瓜 ~20t/h（~4,000果/h）· Echo 上限 44,000 lb/h</td><td>FreshPlaza / US Case</td></tr>
+          <tr><td>US 西瓜模型</td><td class="mono">拒收 3.5%→1% · ≈$700,000/季（上界）</td><td>US Business Case</td></tr>
+          <tr><td>JimboFresh 规模</td><td class="mono">&gt;38,000 吨西瓜/年（2025）</td><td>JimboFresh PR</td></tr>
+          <tr><td>美国时间表</td><td class="mono">2027 初首装 · 2027末–2028 放量</td><td>The Packer</td></tr>
+          <tr><td>法律主体</td><td class="mono">Orbem GmbH · HRB 252715 · VAT DE327553341</td><td>Legal Notice</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>10.2 值得原样引用的金句</h3>
+    <blockquote class="quote">“The world gets better when you see it from the inside out.”<cite>— 首页 Hero</cite></blockquote>
+    <blockquote class="quote">“We're the first and so far only company in the world to demonstrate the use of MRI in less than one second and without humans in the loop.”<cite>— Pedro Gómez, CEO · Series B 2026-01-20</cite></blockquote>
+    <blockquote class="quote">“We move from skilled guesswork to near-perfect precision — and that's exactly what we want to deliver to our consumers.”<cite>— Miguel Ángel J., CEO, JimboFresh</cite></blockquote>
+    <blockquote class="quote">“The Genus Focus technology and in-ovo sexing have been essential in enabling us to build a modern, efficient, and profitable hatchery.”<cite>— Christoffer Singstad, Sirevåg Rugeri</cite></blockquote>
+    <blockquote class="quote">“I'm always mindful to say we cannot reduce rejection rates to 0%… but at least you know what's inside the produce, and you can start charging as a function of quality.”<cite>— Pedro Gómez · The Packer</cite></blockquote>
+    <blockquote class="quote">“Orbem earns revenue from paid subscriptions, imaging hardware sales and professional services.”<cite>— Privacy Policy 2025-06-22</cite></blockquote>
+    <blockquote class="quote">“We exist because some challenges are best solved as a deep tech venture… We shed light on the world’s toughest challenges.”<cite>— Why We Exist · Pedro Gómez</cite></blockquote>
+
+    <h3>10.3 影响力叙事（首页三块）</h3>
+    <div class="pill-list">
+      <div class="pill"><b>For People</b>By 2050, 10 billion people will need affordable, nutritious food.</div>
+      <div class="pill"><b>For the Planet</b>Over 1.25 billion tonnes of produce are lost between harvest and retail.</div>
+      <div class="pill"><b>For Progress</b>By providing radical transparency, we build a more sustainable market.</div>
+      <div class="pill"><b>Brand line</b>The Inside Out Company · make the invisible visible with AI-powered MRI.</div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section id="s11">
+    <div class="sec-h">
+      <div class="sec-n">11</div>
+      <div>
+        <h2>素材怎么用进你们的 BP</h2>
+        <p>不是收藏图片，而是把 Orbem 的素材体系映射成我们的交付清单。</p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>BP 页面</th><th>建议直接使用的 Orbem 素材</th><th>我们应自建的对应物</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>封面 / 愿景</td>
+            <td>首页 Hero 口径；OBJECT-SCAN-DATA 三帧语法</td>
+            <td>自己的“物体→成像→决策”三帧图</td>
+          </tr>
+          <tr>
+            <td>行业问题</td>
+            <td>impact-earth / impact-wheat；FAO 损耗数字</td>
+            <td>目标品类的索赔/损耗本地数据</td>
+          </tr>
+          <tr>
+            <td>技术对比</td>
+            <td><span class="mono">tech-penetration.avif</span> 穿透深度图</td>
+            <td>我们技术在同一坐标系中的位置</td>
+          </tr>
+          <tr>
+            <td>原理页</td>
+            <td>mri-principle / 3d-recon / speed-quality</td>
+            <td>我们原理与加速策略图</td>
+          </tr>
+          <tr>
+            <td>产品缺陷能力</td>
+            <td>西瓜/牛油果/芒果缺陷 SVG 全套</td>
+            <td>我们可检缺陷的同款插画词典</td>
+          </tr>
+          <tr>
+            <td>产线可信度</td>
+            <td>egg-conveyor / pick-place / genus-focus-vencomatic / jimbofresh-install</td>
+            <td>我们自己的装机/中试线照片</td>
+          </tr>
+          <tr>
+            <td>客户案例</td>
+            <td>JimboFresh / Sirevåg / Hendrix 配图+数字+原话</td>
+            <td>1–2 个能改变品类预期的标杆客户</td>
+          </tr>
+          <tr>
+            <td>经济账</td>
+            <td>US 西瓜 $70万 模型结构（四条节省）</td>
+            <td>按我们目标客户重算的 ROI 模型</td>
+          </tr>
+          <tr>
+            <td>政策红利</td>
+            <td>EU Livestock / Hatch Check 新闻图与时间表</td>
+            <td>本地法规/渠道标准时间线</td>
+          </tr>
+          <tr>
+            <td>团队与交付</td>
+            <td>team-group / 24-7 Support / 职能清单</td>
+            <td>Field + Support 组织图与 SLA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>沉淀原则：</strong>
+      Orbem 官网素材强，不是因为“会做图”，而是因为每张图都绑定一个商业主张：
+      穿透图绑定竞争定义，缺陷 SVG 绑定可售能力，产线照片绑定交付可信，案例封面绑定社会证明。
+      我们 copy 的单位应是「主张 + 证据图 + 数字」三件套，而不是单独一张海报。
+    </div>
+
+    <footer>
+      <p><strong>本地素材库：</strong><span class="mono">assets/orbem/</span>（home / tech / fruits / poultry / about / news / cases / misc）</p>
+      <p><strong>配套报告：</strong>Orbem调研报告.html · Orbem官网全站检查报告.html · Orbem体系拆解_商业BP补充.md · 本文件</p>
+      <p>来源：orbem.ai 全站公开页面及官网挂载媒体。图片版权归原权利人 Orbem GmbH 所有；本报告仅作内部竞品调研沉淀。整理日期：2026-09-21。</p>
+    </footer>
+  </section>
+</div>
+
+<script>
+(function(){
+  var p=document.getElementById('progress');
+  function onScroll(){
+    var h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+    if(p) p.style.width=(max>0?(h.scrollTop/max)*100:0)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  // mark broken images
+  document.querySelectorAll('img').forEach(function(img){
+    img.addEventListener('error', function(){
+      var card=img.closest('.card');
+      if(!card) return;
+      card.classList.add('missing');
+      if(!card.querySelector('.ph')){
+        var ph=document.createElement('div');
+        ph.className='ph';
+        ph.textContent='原图未能落地（CDN 403 / 文件损坏）';
+        card.insertBefore(ph, card.firstChild);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

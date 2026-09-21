@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbem 案例动机与创新拆解 · 对照 AGENT-MRI</title>
+<style>
+:root{
+  --ink:#0F1C2E;--paper:#F7F4EE;--paper2:#EFEAE1;--signal:#0E8F8A;
+  --soft:#D7EFED;--amber:#C47B3A;--amber-soft:#F3E6D6;--haze:#5E6F7D;
+  --line:#D5D0C6;--white:#fff;--ok:#2F7D4A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  font-size:15px;line-height:1.75}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--signal);z-index:99}
+.top{position:sticky;top:0;z-index:90;background:rgba(247,244,238,.95);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1000px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:Georgia,serif;font-size:14px}.brand span{color:var(--signal)}
+.nav{display:flex;flex-wrap:wrap;gap:2px 8px}
+.nav a{font-size:12px;color:var(--haze);text-decoration:none;padding:4px 6px}
+.nav a:hover,.nav a:focus-visible{color:var(--signal);background:var(--soft);outline:none}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 72px}
+.hero{margin:22px 0 28px;padding:32px 28px;color:#fff;
+  background:linear-gradient(145deg,#0F1C2E,#163048);border-radius:4px}
+.eyebrow{font-family:Georgia,serif;font-size:12px;letter-spacing:.12em;color:var(--signal);margin:0 0 10px}
+.hero h1{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:clamp(24px,3.4vw,34px);line-height:1.28;margin:0 0 12px}
+.hero p{max-width:46em;color:rgba(255,255,255,.85);margin:0}
+.goal{background:#fff;border:1px solid var(--line);border-left:3px solid var(--signal);padding:16px 18px;margin:0 0 28px}
+.goal h2{font-family:Georgia,serif;font-weight:500;font-size:16px;margin:0 0 8px}
+.goal ol{margin:0;padding-left:18px}
+.goal li{margin-bottom:4px;font-size:14px}
+section{margin:40px 0;scroll-margin-top:64px}
+.sec-h{display:grid;grid-template-columns:48px 1fr;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sec-n{font-family:Georgia,serif;font-size:24px;color:var(--signal);line-height:1;padding-top:4px}
+.sec-h h2{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:22px;margin:0 0 4px}
+.sec-h p{margin:0;color:var(--haze);font-size:13px}
+h3{font-family:Georgia,"Songti SC",serif;font-weight:500;font-size:17px;margin:22px 0 8px}
+.lead{font-size:15.5px;color:#1C2F45;max-width:46em}
+.muted{color:var(--haze);font-size:13px}
+figure{margin:16px 0;background:#fff;border:1px solid var(--line);padding:16px 14px 10px}
+figure svg{display:block;width:100%;height:auto}
+figcaption{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--haze)}
+.fig-label{font-family:Georgia,serif;font-size:11px;letter-spacing:.08em;color:var(--signal);margin-bottom:8px}
+.case{background:#fff;border:1px solid var(--line);margin:16px 0;overflow:hidden}
+.case-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;
+  padding:14px 18px;background:var(--ink);color:#fff}
+.case-head h3{margin:0;color:#fff;font-size:16px}
+.case-head .tag{font-size:11px;padding:2px 8px;border:1px solid rgba(255,255,255,.35);color:#7EC8C3}
+.case-body{padding:16px 18px 18px}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.block{background:var(--paper);border:1px solid var(--line);padding:12px 14px}
+.block h4{margin:0 0 6px;font-family:Georgia,serif;font-size:14px;font-weight:500;color:var(--signal)}
+.block p{margin:0;font-size:13.5px}
+.block.innov h4{color:var(--amber)}
+.callout{background:#fff;border-left:3px solid var(--signal);padding:14px 16px;margin:14px 0}
+.callout.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.table-wrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:13px;min-width:640px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--ink);color:#fff;font-weight:500;font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+td.hl{background:var(--soft)!important}
+.quote{font-family:Georgia,"Songti SC",serif;border-left:2px solid var(--signal);padding:4px 0 4px 12px;margin:10px 0;font-size:14px}
+.quote cite{display:block;margin-top:4px;font-style:normal;font-size:12px;color:var(--haze)}
+.why-list{display:grid;gap:10px;margin:12px 0}
+.why-item{background:#fff;border:1px solid var(--line);padding:14px 16px;display:grid;grid-template-columns:72px 1fr;gap:12px}
+.why-item .n{font-family:"SF Mono",Menlo,monospace;font-size:13px;color:var(--signal);padding-top:2px}
+.why-item h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15px;font-weight:500}
+.why-item p{margin:0;font-size:13.5px}
+.map-box{background:#fff;border:1px solid var(--line);padding:16px 18px;margin:12px 0}
+.map-box h4{margin:0 0 8px;font-family:Georgia,serif;font-size:15px;font-weight:500}
+.map-box ul{margin:0;padding-left:18px;font-size:13.5px}
+.map-box li{margin-bottom:6px}
+.pill{display:inline-block;font-size:11px;padding:2px 7px;border:1px solid var(--signal);color:var(--signal);margin:0 4px 4px 0}
+.pill.amber{border-color:var(--amber);color:var(--amber)}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--haze)}
+@media(max-width:760px){
+  .grid4{grid-template-columns:1fr}
+  .why-item{grid-template-columns:1fr}
+  .nav{display:none}
+}
+</style>
+</head>
+<body>
+
+<div style="position:sticky;top:0;z-index:999;background:#7c2d12;color:#fff;font:13px/1.4 system-ui;padding:8px 14px;text-align:center">
+  公开链接 · 仅供本人查阅 · 含 AGENT-MRI 内部策略，勿转发 · <a href="case-motivation.pdf" style="color:#fdba74">PDF版</a>
+</div>
+
+<div id="progress"></div>
+<header class="top"><div class="top-in">
+  <div class="brand">Orbem Case Study <span>· 对照 AGENT-MRI</span></div>
+  <nav class="nav">
+    <a href="#s00">任务</a><a href="#s01">案例地图</a><a href="#s02">逐案拆解</a>
+    <a href="#s03">扩张规律</a><a href="#s04">创新点</a><a href="#s05">对照我们</a><a href="#s06">BP用法</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+<div class="hero">
+  <p class="eyebrow">Purpose-first Case Research</p>
+  <h1>Orbem 案例动机与创新拆解<br/>——对照 AGENT-MRI 的方向选择</h1>
+  <p>本报告不再罗列官网素材。只回答三件事：<strong>他们为什么做这些方向</strong>；<strong>每个案例解决了什么问题、价值在哪</strong>；<strong>突出贡献与创新是什么</strong>。最后映射到你的 AGENT-MRI / MRI-Agent。</p>
+</div>
+
+<section id="s00" class="goal">
+  <h2>0. 本次任务拆解（先对齐目的）</h2>
+  <ol>
+    <li><strong>你的目的：</strong>为 AGENT-MRI（低场 MRI + 智能体；食品农业优先）判断可借鉴的方向逻辑与创新叙事，服务龙城英才答辩与商业 BP。</li>
+    <li><strong>要搞清的问题：</strong>Orbem 各产品线的<strong>扩张动机</strong>、案例<strong>核心价值/所解问题</strong>、<strong>突出贡献与创新</strong>。</li>
+    <li><strong>不做的事：</strong>不再堆全站图片、不再重复站点架构台账。</li>
+    <li><strong>交付结构：</strong>案例地图 → 逐案四要素卡 → 跨案例扩张规律 → 创新点清单 → 与 AGENT-MRI 对照表 → 可写入 BP 的句子。</li>
+  </ol>
+  <p class="muted" style="margin-top:10px">项目锚点（已从项目材料确认）：AGENT-MRI=整套系统；MRI-Agent=交互式任务执行软件；应用含种蛋受精/性别、生蚝肥满度、芒果缺陷、柚类糖度（嘉应）、鸡脂肪（温氏）；核心表述为「采样—重建—检测任务联合优化」。</p>
+</section>
+
+<!-- 01 -->
+<section id="s01">
+  <div class="sec-h"><div class="sec-n">01</div><div>
+    <h2>案例地图：不是市场列表，是一条扩张链</h2>
+    <p>先看他们“为什么按这个顺序做”，再看单个案例。</p>
+  </div></div>
+
+  <p class="lead">
+    Orbem 公开叙事里，所有场景共享同一物理优势：<strong>MRI 对富水软组织/内部结构的非破坏 3D 成像</strong>。
+    但他们没有同时打五个市场，而是沿一条链推进。
+  </p>
+
+  <figure>
+    <div class="fig-label">Figure 1 · Orbem 方向扩张逻辑（动机链）</div>
+    <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orbem扩张链">
+      <rect width="760" height="320" fill="#fff"/>
+      <text x="380" y="28" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#0F1C2E">平台能力 → 有强付费理由的滩头 → 同场景加购 → 高缺陷成本品类 → 愿景层</text>
+      <rect x="20" y="70" width="130" height="70" rx="4" fill="#0F1C2E"/>
+      <text x="85" y="98" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#7EC8C3">平台</text>
+      <text x="85" y="118" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.75)">工业 MRI×AI</text>
+      <path d="M155 105 H175" stroke="#0E8F8A" stroke-width="1.5"/><path d="M170 99 L180 105 L170 111" fill="#0E8F8A"/>
+      <rect x="185" y="70" width="140" height="70" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+      <text x="255" y="95" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Focus</text>
+      <text x="255" y="114" text-anchor="middle" font-size="11" fill="#5E6F7D">蛋内性别 · 法规刚需</text>
+      <text x="255" y="128" text-anchor="middle" font-size="10" fill="#5E6F7D">动机：伦理禁令+溢价</text>
+      <path d="M330 105 H350" stroke="#0E8F8A" stroke-width="1.5"/><path d="M345 99 L355 105 L345 111" fill="#0E8F8A"/>
+      <rect x="360" y="70" width="140" height="70" rx="4" fill="#D7EFED" stroke="#0E8F8A"/>
+      <text x="430" y="95" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Scale</text>
+      <text x="430" y="114" text-anchor="middle" font-size="11" fill="#5E6F7D">受精状态 · 同客户加购</text>
+      <text x="430" y="128" text-anchor="middle" font-size="10" fill="#5E6F7D">动机：吃掉已有产能浪费</text>
+      <path d="M505 105 H525" stroke="#0E8F8A" stroke-width="1.5"/><path d="M520 99 L530 105 L520 111" fill="#0E8F8A"/>
+      <rect x="535" y="70" width="200" height="70" rx="4" fill="#F3E6D6" stroke="#C47B3A"/>
+      <text x="635" y="95" text-anchor="middle" font-size="13" fill="#0F1C2E">Genus Echo 果品</text>
+      <text x="635" y="114" text-anchor="middle" font-size="11" fill="#5E6F7D">西瓜→牛油果→芒果</text>
+      <text x="635" y="128" text-anchor="middle" font-size="10" fill="#5E6F7D">动机：索赔/损耗钱更大</text>
+      <rect x="20" y="180" width="220" height="54" rx="3" fill="#fff" stroke="#D5D0C6"/>
+      <text x="130" y="202" text-anchor="middle" font-size="12" fill="#0F1C2E">Nuts（探索）</text>
+      <text x="130" y="220" text-anchor="middle" font-size="11" fill="#5E6F7D">同一成像逻辑，商业化更浅</text>
+      <rect x="260" y="180" width="220" height="54" rx="3" fill="#fff" stroke="#D5D0C6"/>
+      <text x="370" y="202" text-anchor="middle" font-size="12" fill="#0F1C2E">Health（愿景）</text>
+      <text x="370" y="220" text-anchor="middle" font-size="11" fill="#5E6F7D">数据飞轮的终局叙事</text>
+      <rect x="500" y="180" width="235" height="54" rx="3" fill="#fff" stroke="#D5D0C6"/>
+      <text x="617" y="202" text-anchor="middle" font-size="12" fill="#0F1C2E">自动伙伴 / OpEx / 标杆客户</text>
+      <text x="617" y="220" text-anchor="middle" font-size="11" fill="#5E6F7D">把技术变成订单的配套系统</text>
+      <text x="380" y="280" text-anchor="middle" font-size="13" fill="#0F1C2E">扩张原则：先证明“工业速度可信”，再证明“客户算得过账”，最后才是品类广度</text>
+      <text x="380" y="302" text-anchor="middle" font-size="12" fill="#5E6F7D">每个新品类都要回答：缺陷是否够贵？现有技术是否真看不见？扫描费能否被节省覆盖？</text>
+    </svg>
+    <figcaption>图 1 · 若只记住一句：Orbem 的案例不是“什么都能扫”，而是“先扫付费理由最强、监管最硬、且光学看不见的内部问题”。</figcaption>
+  </figure>
+</section>
+
+<!-- 02 -->
+<section id="s02">
+  <div class="sec-h"><div class="sec-n">02</div><div>
+    <h2>逐案拆解：动机 · 问题 · 价值 · 创新</h2>
+    <p>每个方向一张卡，四要素固定，便于对照你们的案例页。</p>
+  </div></div>
+
+  <!-- Case 1 -->
+  <div class="case">
+    <div class="case-head">
+      <h3>案例 A · Genus Focus｜种蛋内性别鉴定（In-ovo Sexing）</h3>
+      <span class="tag">现金牛 · 法规驱动</span>
+    </div>
+    <div class="case-body">
+      <div class="grid4">
+        <div class="block">
+          <h4>① 扩张/启动动机</h4>
+          <p>
+            不是“MRI 很酷”，而是：<strong>多国禁止或限制雄雏扑杀</strong>（法/德等），行业需要在孵化早期、非侵入地判断性别；
+            同时渠道对 in-ovo 蛋出现溢价（如挪威约 +10%）。
+            创始团队能力也对口：Pedro 做加速 MRI，Miguel 做成像 AI，Maria 做胚胎生物——问题、技术、伦理在同一交汇点。
+          </p>
+        </div>
+        <div class="block">
+          <h4>② 核心价值 / 解决什么问题</h4>
+          <p>
+            传统做法：出壳后人工鉴别/扑杀雄雏 → 伦理压力、生物安全风险、劳动力短缺、政策不可持续。
+            侵入式 in-ovo（打孔取样）又有孵化率与生物安全代价。
+            <strong>价值：</strong>在 D11–12、痛觉阈值前完成判定，雌蛋继续孵化，雄/无精蛋可分流利用；客户少扑杀、少人工、可合规。
+          </p>
+        </div>
+        <div class="block">
+          <h4>③ 突出贡献</h4>
+          <p>
+            把“伦理/监管问题”做成了<strong>可规模复制的工业产品</strong>，而不是实验室 demo。
+            用客户结果说话：雄雏率 &lt;1%（案例均值 0.5%）；Sirevåg 用它建立新孵化场盈利模型；Hendrix 德国老厂房改造后达产。
+          </p>
+        </div>
+        <div class="block innov">
+          <h4>④ 创新在哪</h4>
+          <p>
+            <strong>技术：</strong>非侵入 MRI + 深度学习，&lt;1 秒/枚，宣称无人在环；全品种（棕/白壳）可用。<br/>
+            <strong>系统：</strong>非金属蛋链、信号握手、机器人分拣、trolley-to-trolley。<br/>
+            <strong>商业：</strong>Vencomatic 自动化绑定 + 设备金融 → 按性能费用，降低客户门槛。<br/>
+            <strong>数据：</strong>装机越多模型越准，形成“生产数据飞轮”。
+          </p>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>动机一句话：</strong>法规把“可选伦理”变成“必须合规”，Orbem 用已工业化的 MRI 把合规成本变成可计算的产品。
+      </div>
+      <blockquote class="quote">“The Genus Focus technology and in-ovo sexing have been essential in enabling us to build a modern, efficient, and profitable hatchery.”<cite>— Sirevåg Rugeri</cite></blockquote>
+    </div>
+  </div>
+
+  <!-- Case 2 -->
+  <div class="case">
+    <div class="case-head">
+      <h3>案例 B · Genus Scale｜孵化前受精状态检测</h3>
+      <span class="tag">同客户加购 · 效率账</span>
+    </div>
+    <div class="case-body">
+      <div class="grid4">
+        <div class="block">
+          <h4>① 动机</h4>
+          <p>
+            Focus 已证明：孵化场愿意为“看见蛋内部”付费。
+            下一步不是去陌生行业，而是<strong>在同一客户、同一台 MRI 能力上，吃掉另一块确定浪费</strong>：
+            约 8–20% 进孵化器的蛋其实未受精，却占空间、耗电、耗人工，孵后才被发现。
+          </p>
+        </div>
+        <div class="block">
+          <h4>② 问题与价值</h4>
+          <p>
+            问题：孵后未受精蛋按欧盟相关法规常成“废料”，还要处置成本；孵化器产能被空蛋占用。
+            <strong>价值：</strong>Day 0 识别并剔除 → 释放最高约 20% 孵化产能；未受精蛋在加热前仍是可售商品（工业蛋/破壳蛋）。
+            从“付处置费”变成“回收商品价值”。
+          </p>
+        </div>
+        <div class="block">
+          <h4>③ 突出贡献</h4>
+          <p>
+            把检测时点从 D18 照蛋/D4–7 早期照蛋，提前到<strong>入孵前</strong>。
+            公开材料强调：这是全球少见的 in-ovo fertilization status 商业方案；Wimex 等开始装机。
+          </p>
+        </div>
+        <div class="block innov">
+          <h4>④ 创新</h4>
+          <p>
+            创新主要不在“新物理”，而在<strong>问题重定义</strong>：不是“有没有受精”学术问题，而是“产能与副产品收入”经营问题。
+            与 Focus 共用平台/产线伙伴，边际交付成本低——这是<strong>平台化扩张</strong>的教科书动作。
+          </p>
+        </div>
+      </div>
+      <div class="callout warn">
+        <strong>对 AGENT-MRI 的提示：</strong>
+        你们种蛋方向同时覆盖「受精状态 + 性别」，叙事上更接近 Orbem 的 Focus+Scale 合集。
+        BP 里应拆开两笔账：一笔合规/伦理，一笔<strong>孵化器利用率与副产物</strong>，不要只讲检测精度。
+      </div>
+    </div>
+  </div>
+
+  <!-- Case 3 -->
+  <div class="case">
+    <div class="case-head">
+      <h3>案例 C · Genus Echo｜果品内部品质（先西瓜）</h3>
+      <span class="tag">品类扩张 · 索赔经济学</span>
+    </div>
+    <div class="case-body">
+      <div class="grid4">
+        <div class="block">
+          <h4>① 为什么从家禽走到果品</h4>
+          <p>
+            平台能力已验证（高速、非破坏、工业交付）。
+            果品的新动机是<strong>钱</strong>：收获后损耗巨大；西瓜/牛油果等深部缺陷（空心、内部褐变、过熟）光学看不见，
+            导致整批拒收、索赔、品牌损伤。CEO 明确：拒收率不可能到 0%，但生产者需要“知道里面是什么”。
+          </p>
+        </div>
+        <div class="block">
+          <h4>② 问题与价值</h4>
+          <p>
+            现状：破坏性抽样 + “敲瓜听声”老师傅 → 用少数果代表整车，信息错误成本高。
+            <strong>价值：</strong>100% 非破坏全检；按内部质量分层/分流（鲜销 vs 加工）；减少退货与索赔；可支撑分层定价与品牌信任。
+          </p>
+        </div>
+        <div class="block">
+          <h4>③ 突出贡献 / 案例</h4>
+          <p>
+            <strong>JimboFresh（西班牙）</strong>：全球首个鲜果 AI-MRI 商业装机，&gt;38,000 吨西瓜/年体量，2026 产季启用。
+            不是 pilot，是“改变品类期望”的标杆客户。
+            美国侧用 Business Case 把价值算成钱：拒收 3.5%→1%，60M lb 季节约模型约 $70 万（上界）。
+          </p>
+        </div>
+        <div class="block innov">
+          <h4>④ 创新</h4>
+          <p>
+            <strong>对象工程：</strong>天然尺寸差异下仍按最大视野采集，不拖慢产线。<br/>
+            <strong>规则权归客户：</strong>分级阈值生产者定，系统输出匹配现有产线语言。<br/>
+            <strong>品类选择逻辑：</strong>只打“深部缺陷贵 + 光学盲区”的果（西瓜空心/撞击/过熟；牛油果褐变等）。<br/>
+            <strong>商业模式创新：</strong>pay-per-scan/按磅，OpEx 替代 CAPEX。
+          </p>
+        </div>
+      </div>
+      <blockquote class="quote">“We move from skilled guesswork to near-perfect precision.”<cite>— JimboFresh CEO</cite></blockquote>
+      <blockquote class="quote">“I cannot reduce rejection rates to 0%… but you know what's inside the produce, and you can start charging as a function of quality.”<cite>— Pedro Gómez · The Packer</cite></blockquote>
+    </div>
+  </div>
+
+  <!-- Case 4 -->
+  <div class="case">
+    <div class="case-head">
+      <h3>案例 D · 牛油果 / 芒果｜果品纵深</h3>
+      <span class="tag">高价值鲜果 · 信任问题</span>
+    </div>
+    <div class="case-body">
+      <div class="grid4">
+        <div class="block">
+          <h4>① 动机</h4>
+          <p>
+            牛油果/芒果单价高、货架期短、内部缺陷（褐变、jelly seed、soft nose、冷害）在外观上常不可见；
+            供应链从种植到零售都靠切开抽检，有时一批切开损耗高达 10%。
+            消费端体验像“抽奖” → <strong>品质不信任本身就是市场痛点</strong>。
+          </p>
+        </div>
+        <div class="block">
+          <h4>② 价值</h4>
+          <p>
+            非破坏看内部褐变/维管束褐变/碰压/冷害/早萌等；
+            产线可剔除问题果、优化催熟与物流；品牌方可承诺更稳定品质。
+            对 Orbem：在 Echo 平台上增加缺陷词典与模型，不必重造硬件。
+          </p>
+        </div>
+        <div class="block">
+          <h4>③ 贡献</h4>
+          <p>
+            把“果品 MRI”从单品类 demo 推成<strong>可配置缺陷库产品</strong>（官网已公开西瓜/牛油果/芒果缺陷图谱）。
+            公开访谈：实验室数百样本即可冷启动到客户可感知价值——强调<strong>方法迁移速度</strong>。
+          </p>
+        </div>
+        <div class="block innov">
+          <h4>④ 创新</h4>
+          <p>
+            创新点是<strong>跨果种方法论</strong>：同一成像平台 + 与客户共同定义缺陷 + 现场数据持续学习。
+            以及把“成熟度/硬度阶段”纳入检测，而不只做坏果二分。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case 5 -->
+  <div class="case">
+    <div class="case-head">
+      <h3>案例 E · Nuts / Health｜探索与终局</h3>
+      <span class="tag">边界与愿景</span>
+    </div>
+    <div class="case-body">
+      <div class="grid4">
+        <div class="block">
+          <h4>Nuts 动机与价值</h4>
+          <p>
+            坚果同样有“壳内看不见”：霉变、虫蛀、裂纹。
+            价值在 QA/QC 一致性；但商业化深度明显低于家禽与果品——说明 Orbem 对<strong>节拍、缺陷付费强度、客户集中度</strong>有筛选，不是有图就能上。
+          </p>
+        </div>
+        <div class="block">
+          <h4>Health 动机</h4>
+          <p>
+            公开材料把健康写成数据飞轮的终局：蛋与果的海量内部生物数据 → 更强模型 → 未来人体/预防性检查。
+            作用更多是<strong>融资叙事与使命完整度</strong>，不是当下主营收。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="s03">
+  <div class="sec-h"><div class="sec-n">03</div><div>
+    <h2>跨案例规律：他们到底在为什么而拓展</h2>
+    <p>把五个案例叠起来，动机只有四类。</p>
+  </div></div>
+
+  <div class="why-list">
+    <div class="why-item">
+      <div class="n">M1</div>
+      <div>
+        <h4>监管/伦理推力（Focus）</h4>
+        <p>外部规则先创造“必须做”，再轮到技术选型。增长不靠教育市场，靠<strong>合规截止日期</strong>。</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="n">M2</div>
+      <div>
+        <h4>同一客户、同一平台的效率加购（Scale）</h4>
+        <p>获客成本最高的客户，用第二 SKU 榨取更多价值：产能、能源、副产物、计划确定性。</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="n">M3</div>
+      <div>
+        <h4>缺陷经济学驱动的品类扩张（Echo 果品）</h4>
+        <p>只进入“内部缺陷足够贵、现有光学看不见、单件价值撑得起扫描费”的品类。西瓜是标杆，牛油果/芒果是纵深。</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="n">M4</div>
+      <div>
+        <h4>数据资产与终局叙事（Health / 生物数据集）</h4>
+        <p>Series B 与官网反复强调 world’s largest biological dataset——扩张同时在积累<strong>可迁移的数据护城河</strong>。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>本质：</strong>
+    Orbem 拓展的单位不是“行业”，而是<strong>一类付费理由</strong>：
+    合规付费 → 效率付费 → 索赔/品质付费 → （远期）健康数据付费。
+    技术只是让这四类付费变得可交付。
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="s04">
+  <div class="sec-h"><div class="sec-n">04</div><div>
+    <h2>突出贡献与创新：可被对手模仿的 / 难模仿的</h2>
+    <p>写进 BP 时，要分清“我们也有”和“他家独有”。</p>
+  </div></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>层</th><th>Orbem 的突出贡献</th><th>创新性质</th><th>难模仿程度</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>物理/工程</strong></td>
+          <td>把临床 MRI 工业化到 &lt;1s、可产线集成、宣称无人在环</td>
+          <td>采集/重建/自动化/安全设计的系统工程</td>
+          <td class="hl">高（磁体、产线、工程团队）</td>
+        </tr>
+        <tr>
+          <td><strong>AI</strong></td>
+          <td>双角色：分类决策 + 加速成像；跨品种持续学习</td>
+          <td>Vertical AI + 生产数据飞轮</td>
+          <td class="hl">中高（需要装机量）</td>
+        </tr>
+        <tr>
+          <td><strong>产品</strong></td>
+          <td>Genus 家族：同一平台多 SKU；缺陷图谱产品化</td>
+          <td>场景可配置，而不是单点算法</td>
+          <td>中</td>
+        </tr>
+        <tr>
+          <td><strong>交付</strong></td>
+          <td>与自动化巨头绑定；厂房改造级实施；24/7 支持</td>
+          <td>把 deep tech 做成可运维的工业系统</td>
+          <td class="hl">高（组织与伙伴生态）</td>
+        </tr>
+        <tr>
+          <td><strong>商业</strong></td>
+          <td>OpEx/按扫描；设备金融；标杆客户先发</td>
+          <td>用付费模式降低决策门槛</td>
+          <td>中（可学，但需供应链与服务成本结构）</td>
+        </tr>
+        <tr>
+          <td><strong>市场</strong></td>
+          <td>用政策时间表、技术对比文、经济模型页定义赛道</td>
+          <td>内容即市场准入</td>
+          <td>低中（可学，执行成本在内容与案例）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <strong>关键判断：</strong>
+    Orbem 最难被抄的不是“会不会用 MRI/AI”，而是
+    <strong>“工业节拍 + 产线交付组织 + 法规/标杆客户订单 + 数据量”</strong>的叠加。
+    单点算法或实验室精度，无法复制他们的扩张速度。
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="s05">
+  <div class="sec-h"><div class="sec-n">05</div><div>
+    <h2>对照 AGENT-MRI：我们该抄什么、不同在哪</h2>
+    <p>把 Orbem 案例动机，映射到你已有的五个应用场景。</p>
+  </div></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>你们场景</th><th>最近的 Orbem 案例</th><th>Orbem 的动机类型</th><th>对你们的启示（核心价值怎么讲）</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>种蛋受精状态</strong></td>
+          <td>Genus Scale</td>
+          <td>M2 同客户效率加购</td>
+          <td>讲清：空蛋占产能、能源、人工；孵前剔除 → 产能与副产物价值。勿只讲“受精率识别准确率”。</td>
+        </tr>
+        <tr>
+          <td><strong>种蛋性别</strong></td>
+          <td>Genus Focus</td>
+          <td>M1 合规/伦理 + M2 效率</td>
+          <td>国内若政策未强制，叙事要转为：省鉴别人工、雄雏分流利用、孵化计划确定性；把公母鉴别写成<strong>专项验证</strong>（你们材料已要求，保持）。</td>
+        </tr>
+        <tr>
+          <td><strong>生蚝肥满度/分级</strong></td>
+          <td>（Orbem 未主打）最近是果品“内部品质”</td>
+          <td>M3 缺陷/品质经济学</td>
+          <td>你们相对 Orbem 的<strong>空白机会</strong>：闭壳外观相近、肉重/肥满看不见。价值应绑“分级销售与出肉率”，而不只是成像好看。已有 FACT 研究与企业申报协议——BP 可写方法基础，订单状态保持“待推进”。</td>
+        </tr>
+        <tr>
+          <td><strong>芒果内部缺陷</strong></td>
+          <td>Genus Echo 芒果纵深</td>
+          <td>M3 缺陷经济学</td>
+          <td>与 Orbem 同赛道正面叙事：裂痕/腐烂/褐变影响分级与储运。你们已有 MRI-实物对照素材，应强调<strong>同果配对证据</strong>，避免被当成通用概念图。</td>
+        </tr>
+        <tr>
+          <td><strong>柚类糖度（嘉应）</strong></td>
+          <td>Orbem 更偏缺陷二分；糖度更接近 NIR 传统优势区</td>
+          <td>M3 变体：品质指标而非缺陷</td>
+          <td>差异化要讲清：MRI 提供的是<strong>内部结构/水分相关可定量信息 + 可复用平台</strong>，不是宣称全面替代 NIR。你们材料已写“需求沟通/拟开发”——保持阶段诚实；创新叙事落在<strong>同果参照 + 方法复用</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>鸡脂肪活体定量（温氏）</strong></td>
+          <td>Orbem 基本不做活体畜禽体成分</td>
+          <td>你们的 M1/M2 变体：育种决策</td>
+          <td>这是你们相对 Orbem 的<strong>差异化案例</strong>：活体逐只 vs 屠宰抽检。价值绑“选育决策覆盖度”，创新绑“区域定量 + 与生产任务结合”。保持“待工程化与现场验证”口径。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.1 你们已具备、Orbem 叙事里也强调的“同构点”</h3>
+  <div class="map-box">
+    <ul>
+      <li><span class="pill">平台思维</span>AGENT-MRI 整机 + MRI-Agent 软件 ≈ Orbem 的 Genus 平台 + AI/应用层</li>
+      <li><span class="pill">联合加速</span>你们的「采样—重建—检测联合优化」对应 Orbem 的“AI 加速 MRI、速度与精度同时保”</li>
+      <li><span class="pill">多对象复用</span>种蛋/生蚝/果品/鸡脂肪 ≈ 他们蛋→果→坚果的跨对象逻辑（你们对象更杂，更要讲清<strong>方法复用边界</strong>）</li>
+      <li><span class="pill">科研到产业</span>高校/国创/企业合作起步，与他们“先孵化场后包装厂”同构</li>
+    </ul>
+  </div>
+
+  <h3>5.2 必须正视的差距（BP 里不要回避）</h3>
+  <div class="map-box">
+    <ul>
+      <li><strong>场强与成本结构：</strong>你们是低场路线，优势是成本/部署，劣势可能是信噪与节拍——要用<strong>任务级联合加速与场景够用精度</strong>论证，而不是对标 Orbem &lt;1s 高场工业 MRI。</li>
+      <li><strong>装机与数据飞轮：</strong>Orbem 已 &gt;2 亿枚蛋扫描；你们阶段成果/样机/协议，不能写成已规模化订单。</li>
+      <li><strong>自动化伙伴：</strong>他们有 Vencomatic；你们需要孵化设备/分选线/水产加工线的集成伙伴策略。</li>
+      <li><strong>付费理由清晰度：</strong>他们每条产品线都能用一句话说清“谁付钱、为什么付”。你们生蚝/柚类/鸡脂肪仍处在方法与沟通阶段，BP 要写清<strong>下一步验证什么</strong>。</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>一句话战略对照：</strong><br/>
+    Orbem：高场工业 MRI 平台 × 法规与索赔市场 × 产线交付组织。<br/>
+    AGENT-MRI：低场 + 智能体方法平台 × 食品农业科研/企业检测任务 × 联合加速与方法复用。<br/>
+    可 copy 的是<strong>“付费动机优先 + 平台复用 + 案例证据链”</strong>；不可硬 copy 的是他们的场强、装机量与自动化生态。
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="s06">
+  <div class="sec-h"><div class="sec-n">06</div><div>
+    <h2>可写入你们 BP / 答辩的结论句</h2>
+    <p>基于案例研究，直接可用的表述（保持与真实阶段一致）。</p>
+  </div></div>
+
+  <div class="map-box">
+    <h4>方向选择逻辑（对标 Orbem 方法论）</h4>
+    <ul>
+      <li>我们不按“MRI 能扫什么”铺场景，而按<strong>“谁必须为看见内部信息付费”</strong>排序：效率（孵化产能/分级销售）→ 品质损失（果品缺陷/肥满度）→ 育种决策（活体定量）。</li>
+      <li>Orbem 的案例表明：深科技扩张的成功条件是<strong>缺陷足够贵 × 现有技术看不见 × 扫描成本可被节省覆盖</strong>；我们对每一新对象沿同一清单筛选。</li>
+    </ul>
+  </div>
+  <div class="map-box">
+    <h4>种蛋案例（对照 Focus/Scale）</h4>
+    <ul>
+      <li>与 Orbem 商业化路径同构：先解决“孵前看见内部状态”，再扩展到性别等专项验证。</li>
+      <li>价值表达双轨：<strong>产能与资源效率</strong>（受精状态）+ <strong>专项研发</strong>（公母鉴别），不把未完成验证写成已交付能力。</li>
+    </ul>
+  </div>
+  <div class="map-box">
+    <h4>果品/生蚝案例（对照 Echo）</h4>
+    <ul>
+      <li>国际标杆（如 JimboFresh）已证明“内部品质全检”可进入包装线；我们的切入点是<strong>低场成本与智能体方法复用</strong>，先科研/方法，再企业任务。</li>
+      <li>生蚝相对 Orbem 果品叙事的差异优势：闭壳对象、出肉率/肥满度与销售直接相关——这是我们案例页应主打的“独特付费理由”。</li>
+    </ul>
+  </div>
+  <div class="map-box">
+    <h4>创新表述（与 MRI-Agent 对齐）</h4>
+    <ul>
+      <li>不止成像算法：而是<strong>按检测对象与业务目标配置采集与分析</strong>，把内部信息转化为分流、分级与选育依据。</li>
+      <li>核心方法句保持：采样—重建—检测任务联合优化；MRI-Agent 负责目标拆解、计划、工具执行与反馈（交互原型/预设分支阶段需如实表述）。</li>
+    </ul>
+  </div>
+
+  <p class="muted">本报告依据 Orbem 公开案例与你项目材料中的已确认口径整理；未把 Orbem 的模型节省或未完成合作升级为你们的业绩。</p>
+</section>
+
+<footer>
+  <p><strong>项目对应：</strong>AGENT-MRI / MRI-Agent · 龙城英才·领军型创业人才答辩材料体系 · 常州水木岸桢 / 羿光相关产业场景</p>
+  <p><strong>Orbem 来源：</strong>官网产品页、Series B、JimboFresh、Sirevåg、Hendrix、Capacity Burner、EU 畜牧策略、The Packer、FreshPlaza 等公开材料（本目录既有调研已覆盖）。</p>
+  <p>整理日期：2026-09-21 · 用途：内部战略与 BP 叙事，不替代科研结论与客户合同状态。</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var p=document.getElementById('progress');
+  function onScroll(){
+    var h=document.documentElement,m=h.scrollHeight-h.clientHeight;
+    if(p)p.style.width=(m>0?(h.scrollTop/m)*100:0)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+</body>
+</html>
